@@ -18,18 +18,30 @@ export class ProductService {
   }
 
   getProductList(categoryId: number): Observable<Product[]> {
-    // need to buld URL based on category id
-    const searchUrl = `${this.baseUrl}/search/findByCategoryId?id=${categoryId}`;
+    // need to build URL based on category id
+    const categoryUrl = `${this.baseUrl}/search/findByCategoryId?id=${categoryId}`;
 
-    return this.httpClient.get<GetResponseProducts>(searchUrl).pipe(
-      map(response => response._embedded.products)
-    );
+    return this.getProducts(categoryUrl);
   }
 
   getProductCategories(): Observable<ProductCategory[]> {
     return this.httpClient.get<GetResponseProductCategory>(this.categoryUrl).pipe(
       tap(x => console.log('category form http call: ', x)),
       map(response => response._embedded.productCategory)
+    );
+  }
+
+  searchProducts(theKeyword: string) {
+    // need to build URL base on the keyword
+    const searchUrl = `${this.baseUrl}/search/findByNameContaining?name=${theKeyword}`;
+
+    return this.getProducts(searchUrl);
+  }
+
+  private getProducts(builtUrl: string) {
+    return this.httpClient.get<GetResponseProducts>(builtUrl).pipe(
+      tap(x => console.log(`products=${x}`)),
+      map(response => response._embedded.products)
     );
   }
 }
