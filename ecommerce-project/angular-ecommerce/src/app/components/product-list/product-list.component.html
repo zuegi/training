@@ -8,8 +8,12 @@
         <!-- loop over the collection of products -->
         <div *ngFor="let product of products" class="col-md3">
           <div class="product-box">
-            <img src="{{product.imageUrl}}" class="img-responsive">
-            <h1>{{product.name}}</h1>
+            <a routerLink="/products/{{product.id}}">
+              <img src="{{product.imageUrl}}" class="img-responsive">
+            </a>
+            <a routerLink="/products/{{product.id}}">
+              <h1>{{product.name}}</h1>
+            </a>
             <div class="price">{{ product.unitPrice | currency: 'CHF'}}</div>
             <a href="#" class="primary-btn">Add to cart</a>
           </div>
@@ -18,7 +22,7 @@
       <!-- if the products are empty-->
       <div *ngIf="products?.length == 0" class="alert alert-warning col-md-12"
            role="alert">
-          No products found
+        No products found
       </div>
     </div>
   </div>

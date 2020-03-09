@@ -1,4 +1,5 @@
 export class Product {
+  id: number;
   siku: string;
   name: string;
   description: string;
