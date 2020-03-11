@@ -11,4 +11,3 @@ mvn archetype:generate
 	-DinteractiveMode=false
 ```
 
-## Ignore some files
