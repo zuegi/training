@@ -5,9 +5,9 @@
       <design:stencilid><![CDATA[BPMNDiagram]]></design:stencilid>
       <design:language><![CDATA[English]]></design:language>
       <design:creationdate><![CDATA[2020-05-09T16:14:33.279Z]]></design:creationdate>
-      <design:modificationdate><![CDATA[2020-05-10T08:00:39.841Z]]></design:modificationdate>
+      <design:modificationdate><![CDATA[2020-05-10T13:30:15.211Z]]></design:modificationdate>
     </extensionElements>
-    <startEvent id="startnoneevent1" flowable:initiator="initiator" flowable:formFieldValidation="false">
+    <startEvent id="startnoneevent1" flowable:initiator="initiator" flowable:formKey="prospectName" flowable:formFieldValidation="false">
       <extensionElements>
         <flowable:work-form-field-validation><![CDATA[false]]></flowable:work-form-field-validation>
         <design:stencilid><![CDATA[StartNoneEvent]]></design:stencilid>
@@ -33,11 +33,11 @@
     <sequenceFlow id="sequenceFlow3" name="prospect not found" sourceRef="exclusive_Databased_Gateway1" targetRef="formTask1">
       <extensionElements>
         <flowable:condition group="true" match="all" targetAttribute="condition">
-          <flowable:condition sourceVariableType="variable" sourceName="prospectName" sourceType="string" sourceScope="root" operator="notEquals" targetVariableType="value" targetValue="Paul Allen" targetType="string"></flowable:condition>
+          <flowable:condition sourceVariableType="variable" sourceName="prospectName" sourceType="string" sourceScope="root" operator="notEquals" targetVariableType="value" targetValue="Paul" targetType="string"></flowable:condition>
         </flowable:condition>
         <design:stencilid><![CDATA[SequenceFlow]]></design:stencilid>
       </extensionElements>
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${vars:notEquals(root.prospectName, 'Paul Allen')}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${vars:notEquals(root.prospectName, 'Pauls')}]]></conditionExpression>
     </sequenceFlow>
     <exclusiveGateway id="exclusive_Databased_Gateway2">
       <extensionElements>
@@ -72,6 +72,10 @@
     </sequenceFlow>
     <serviceTask id="serviceTask2" name="find prospect in ACS MS" flowable:delegateExpression="${prospectRequestProcessor}">
       <documentation>${prospectName} mochte einen OnBarding Request stellen.</documentation>
+      <extensionElements>
+        <design:stencilid><![CDATA[ServiceTask]]></design:stencilid>
+        <design:stencilsuperid><![CDATA[Task]]></design:stencilsuperid>
+      </extensionElements>
     </serviceTask>
   </process>
   <bpmndi:BPMNDiagram id="BPMNDiagram_prospectApplication">

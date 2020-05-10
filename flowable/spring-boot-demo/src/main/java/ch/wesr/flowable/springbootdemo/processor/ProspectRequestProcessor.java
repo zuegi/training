@@ -21,5 +21,6 @@ public class ProspectRequestProcessor implements JavaDelegate {
         } else {
             log.info("Tja, {}, wir müssen dich wohl los werden", prospectName);
         }
+        delegateExecution.setVariable("root.prospectName", prospectName);
     }
 }
