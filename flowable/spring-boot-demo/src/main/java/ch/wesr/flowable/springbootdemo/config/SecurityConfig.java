@@ -8,6 +8,10 @@ import org.springframework.http.HttpMethod;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
 import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.core.userdetails.User;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
@@ -21,18 +25,19 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         http
                 .authorizeRequests()
-                .antMatchers("/h2-console/**").permitAll()  // h2-console permitted
-        ;
-        http.csrf().ignoringAntMatchers("/h2-console/**");//don't apply CSRF protection to /h2-console
-        http.csrf().disable(); //don't apply CSRF protection
+                .requestMatchers(EndpointRequest.to(InfoEndpoint.class, HealthEndpoint.class)).permitAll()
+                .requestMatchers(EndpointRequest.toAnyEndpoint()).hasRole("ACTUATOR")
+                .antMatchers("/*-api/**").hasRole("REST")
+                .anyRequest().authenticated()
+                .and()
+                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER).and()
+                .csrf().disable()
+                .httpBasic();
 
         //  Refused to display 'http://localhost:8080/xxx/xxx/upload-image?CKEditor=text&CKEditorFuncNum=1&langCode=ru'
         //  in a frame because it set 'X-Frame-Options' to 'DENY'.
+        //  in h2-console
         http.headers().frameOptions().sameOrigin();
-        // keine Sessions
-        http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
-        // cors
-        http.cors().configurationSource(corsConfiguratonSource());
     }
 
     private CorsConfigurationSource corsConfiguratonSource() {
@@ -52,4 +57,18 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return source;
     }
 
+
+    //@Bean
+    public UserDetailsService customUserDetailsService() {
+        UserDetails user1 = User.withUsername("custom-actuator")
+                .password("{noop}test")
+                .roles("ACTUATOR")
+                .build();
+
+        UserDetails user2 = User.withUsername("custom-rest")
+                .password("{noop}test")
+                .roles("REST")
+                .build();
+        return new InMemoryUserDetailsManager(user1, user2);
+    }
 }

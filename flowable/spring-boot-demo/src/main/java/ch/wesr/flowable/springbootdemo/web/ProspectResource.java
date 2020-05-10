@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/prospect")
 public class ProspectResource {
 
-    @GetMapping("/find")
+    @GetMapping("/{name}")
     public ResponseEntity<String> findByName(@PathVariable String name) {
 
-        if(name == "Paul Allen") {
-            return ResponseEntity.ok(name);
+        if(name.equals("Paul")) {
+            return ResponseEntity.ok("Hallo " +name +", willkommen an Board");
         }
-        return ResponseEntity.ok(null);
+        return ResponseEntity.ok("Ooooops, da ging wohl was schief");
 
 
     }
