@@ -10,10 +10,7 @@ import org.springframework.test.context.junit.jupiter.SpringExtension;
 import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 
-@FlowableTest
 @SpringBootTest
-@ExtendWith(FlowableSpringExtension.class)
-@ExtendWith(SpringExtension.class)
 public class SpringBootDemoTestConfiguration {
 
 }
