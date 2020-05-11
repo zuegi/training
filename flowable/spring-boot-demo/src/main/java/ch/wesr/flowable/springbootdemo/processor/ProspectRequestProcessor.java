@@ -11,32 +11,26 @@ import org.springframework.stereotype.Component;
 public class ProspectRequestProcessor implements JavaDelegate {
 
 
-    public static final String PAUL = "Paul";
 
+    /**
+     * Das ist ein Request
+     * @param delegateExecution
+     */
     @Override
     public void execute(DelegateExecution delegateExecution) {
         String prospectName = delegateExecution.getVariable("prospectName", String.class);
         log.info("Wir suchen nach dem Prospect: {} ", prospectName);
         AcsMsKunde acsMsKunde;
-        if (prospectName.equals(PAUL)) {
+        if (prospectName.equals(AcsMsKunde.PAUL)) {
             log.info("Hallo {}, willkommen an Board", prospectName);
-            acsMsKunde = this.erstelleKunde(prospectName);
+            acsMsKunde = AcsMsKunde.VALID_KUNDE;
         } else {
-            log.info("Tja, {}, wir müssen dich wohl los werden", prospectName);
+            log.info("Tja, {}, wir müssen dich wohl manuell erfasse", prospectName);
             acsMsKunde = new AcsMsKunde();
+            acsMsKunde.setVorname(prospectName);
         }
         delegateExecution.setVariable("root.prospectName", prospectName);
         delegateExecution.setVariable("kunde", acsMsKunde);
     }
 
-
-    private AcsMsKunde erstelleKunde(String prospectName) {
-        AcsMsKunde acsMsKunde = new AcsMsKunde();
-        acsMsKunde.setVorname(prospectName);
-        acsMsKunde.setNachname("Allen");
-        acsMsKunde.setOrt("Mountain View");
-        acsMsKunde.setPlz("80008");
-        acsMsKunde.setStrasse("Palo Alto Strasse");
-        return acsMsKunde;
-    }
 }

@@ -23,29 +23,29 @@
         <design:stencilid><![CDATA[Exclusive_Databased_Gateway]]></design:stencilid>
       </extensionElements>
     </exclusiveGateway>
-    <userTask id="formTask1" name="User task" flowable:assignee="${initiator}" flowable:formFieldValidation="false">
+    <userTask id="fillProspectManuallyTask" name="Fill Prospect manually" flowable:assignee="${initiator}" flowable:formFieldValidation="false">
+      <documentation>Gather and fill the information about the prospect manually</documentation>
       <extensionElements>
         <flowable:task-candidates-type><![CDATA[all]]></flowable:task-candidates-type>
         <design:stencilid><![CDATA[FormTask]]></design:stencilid>
         <design:stencilsuperid><![CDATA[Task]]></design:stencilsuperid>
       </extensionElements>
     </userTask>
-    <sequenceFlow id="sequenceFlow3" name="prospect not found" sourceRef="exclusive_Databased_Gateway1" targetRef="formTask1">
+    <sequenceFlow id="sequenceFlow3" name="prospect not found" sourceRef="exclusive_Databased_Gateway1" targetRef="fillProspectManuallyTask">
       <extensionElements>
         <flowable:condition group="true" match="all" targetAttribute="condition">
           <flowable:condition sourceVariableType="variable" sourceName="prospectName" sourceType="string" sourceScope="root" operator="notEquals" targetVariableType="value" targetValue="Paul" targetType="string"></flowable:condition>
         </flowable:condition>
         <design:stencilid><![CDATA[SequenceFlow]]></design:stencilid>
       </extensionElements>
-<!--      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${vars:notEquals(root.prospectName, 'Pauls')}]]></conditionExpression>-->
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${vars:notEquals(kunde.isKunde(), true)}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${!kunde.isKunde()}]]></conditionExpression>
     </sequenceFlow>
     <exclusiveGateway id="exclusive_Databased_Gateway2">
       <extensionElements>
         <design:stencilid><![CDATA[Exclusive_Databased_Gateway]]></design:stencilid>
       </extensionElements>
     </exclusiveGateway>
-    <sequenceFlow id="sequenceFlow4" sourceRef="formTask1" targetRef="exclusive_Databased_Gateway2">
+    <sequenceFlow id="sequenceFlow4" sourceRef="fillProspectManuallyTask" targetRef="exclusive_Databased_Gateway2">
       <extensionElements>
         <design:stencilid><![CDATA[SequenceFlow]]></design:stencilid>
       </extensionElements>
@@ -87,7 +87,7 @@
       <bpmndi:BPMNShape bpmnElement="exclusive_Databased_Gateway1" id="BPMNShape_exclusive_Databased_Gateway1">
         <omgdc:Bounds height="40.0" width="40.0" x="400.0" y="256.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
-      <bpmndi:BPMNShape bpmnElement="formTask1" id="BPMNShape_formTask1">
+      <bpmndi:BPMNShape bpmnElement="fillProspectManuallyTask" id="BPMNShape_fillProspectManuallyTask">
         <omgdc:Bounds height="80.0" width="100.0" x="480.0" y="390.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNShape bpmnElement="exclusive_Databased_Gateway2" id="BPMNShape_exclusive_Databased_Gateway2">
