@@ -37,7 +37,8 @@
         </flowable:condition>
         <design:stencilid><![CDATA[SequenceFlow]]></design:stencilid>
       </extensionElements>
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${vars:notEquals(root.prospectName, 'Pauls')}]]></conditionExpression>
+<!--      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${vars:notEquals(root.prospectName, 'Pauls')}]]></conditionExpression>-->
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${vars:notEquals(kunde.isKunde(), true)}]]></conditionExpression>
     </sequenceFlow>
     <exclusiveGateway id="exclusive_Databased_Gateway2">
       <extensionElements>
