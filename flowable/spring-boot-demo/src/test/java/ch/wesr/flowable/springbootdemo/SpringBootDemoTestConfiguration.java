@@ -1,5 +1,6 @@
 package ch.wesr.flowable.springbootdemo;
 
+import lombok.extern.slf4j.Slf4j;
 import org.flowable.engine.test.FlowableTest;
 import org.flowable.spring.impl.test.FlowableSpringExtension;
 import org.junit.jupiter.api.extension.ExtendWith;

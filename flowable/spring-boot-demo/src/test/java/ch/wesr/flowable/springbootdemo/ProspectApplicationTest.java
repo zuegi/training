@@ -21,7 +21,7 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
-public class ProspectDtoApplicationProcessTest extends SpringBootDemoTestConfiguration{
+public class ProspectApplicationTest extends SpringBootDemoTestConfiguration{
 
     public static final String PROSPECT_APPLICATION = "prospectApplication";
     public static final String NOT_FOUND_PROSPECT = "René";
