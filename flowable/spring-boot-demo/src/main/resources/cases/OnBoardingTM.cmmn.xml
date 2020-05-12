@@ -56,7 +56,7 @@
             </extensionElements>
           </itemControl>
         </planItem>
-        <planItem id="planItem3" name="Find prospect" definitionRef="processTask2"></planItem>
+        <planItem id="planItem3" name="Find prospectDto" definitionRef="processTask2"></planItem>
         <humanTask id="humanTask1" name="Say hello" flowable:assignee="${initiator}" flowable:formKey="sayHello" flowable:formFieldValidation="false">
           <extensionElements>
             <flowable:task-candidates-type><![CDATA[all]]></flowable:task-candidates-type>
@@ -72,7 +72,7 @@
             <design:completionneutral><![CDATA[true]]></design:completionneutral>
           </extensionElements>
         </userEventListener>
-        <processTask id="processTask2" name="Find prospect" flowable:fallbackToDefaultTenant="true" flowable:sameDeployment="true">
+        <processTask id="processTask2" name="Find prospectDto" flowable:fallbackToDefaultTenant="true" flowable:sameDeployment="true">
           <extensionElements>
             <design:stencilid><![CDATA[ProcessTask]]></design:stencilid>
             <design:stencilsuperid><![CDATA[Task]]></design:stencilsuperid>

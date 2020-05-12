@@ -21,7 +21,7 @@ public abstract class AbstractProspect implements Serializable {
     String ort;
 
 
-    public boolean isKunde() {
+    public boolean isRecorded() {
         int x = 0;
         return !StringUtils.isEmpty(this.vorname) && !StringUtils.isEmpty(this.nachname) && !StringUtils.isEmpty(this.strasse)
                 && !StringUtils.isEmpty(this.ort) && !StringUtils.isEmpty(this.plz);

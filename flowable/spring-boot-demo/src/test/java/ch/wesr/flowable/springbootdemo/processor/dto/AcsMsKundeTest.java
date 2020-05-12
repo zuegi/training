@@ -11,29 +11,29 @@ public class AcsMsKundeTest {
 
     @Test
     public void validKunde() {
-        Prospect prospect = erstelleTestKunde(true);
+        ProspectDto prospectDto = erstelleTestKunde(true);
 
-        assertTrue(prospect.isKunde());
+        assertTrue(prospectDto.isRecorded());
     }
 
     @Test
     public void invalidKunde() {
-        Prospect prospect = erstelleTestKunde(false);
+        ProspectDto prospectDto = erstelleTestKunde(false);
 
-        assertFalse(prospect.isKunde());
+        assertFalse(prospectDto.isRecorded());
     }
 
 
-    private Prospect erstelleTestKunde(boolean validKunde) {
-        Prospect prospect = new Prospect();
+    private ProspectDto erstelleTestKunde(boolean validKunde) {
+        ProspectDto prospectDto = new ProspectDto();
         if (validKunde) {
-            prospect.setVorname("Paul");
-            prospect.setNachname("Allen");
-            prospect.setOrt("Mountain View");
-            prospect.setPlz("80008");
-            prospect.setStrasse("Palo Alto Strasse");
+            prospectDto.setVorname("Paul");
+            prospectDto.setNachname("Allen");
+            prospectDto.setOrt("Mountain View");
+            prospectDto.setPlz("80008");
+            prospectDto.setStrasse("Palo Alto Strasse");
         }
-        return prospect;
+        return prospectDto;
     }
 
 }

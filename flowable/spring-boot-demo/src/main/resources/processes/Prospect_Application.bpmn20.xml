@@ -5,7 +5,7 @@
       <design:stencilid><![CDATA[BPMNDiagram]]></design:stencilid>
       <design:language><![CDATA[English]]></design:language>
       <design:creationdate><![CDATA[2020-05-09T16:14:33.279Z]]></design:creationdate>
-      <design:modificationdate><![CDATA[2020-05-12T08:40:18.901Z]]></design:modificationdate>
+      <design:modificationdate><![CDATA[2020-05-12T11:50:33.820Z]]></design:modificationdate>
     </extensionElements>
     <startEvent id="startnoneevent1" flowable:initiator="initiator" flowable:formKey="prospectName" flowable:formFieldValidation="false">
       <extensionElements>
@@ -33,9 +33,9 @@
     <sequenceFlow id="sequenceFlow3" name="prospect not found" sourceRef="exclusive_Databased_Gateway1" targetRef="formTask1">
       <extensionElements>
         <design:stencilid><![CDATA[SequenceFlow]]></design:stencilid>
-        <design:conditionexpression><![CDATA[${(vars:exists(kunde) && (!kunde.isKunde()))}]]></design:conditionexpression>
+        <design:conditionexpression><![CDATA[${(vars:exists(prospect) && (!prospect.isRecorded()))}]]></design:conditionexpression>
       </extensionElements>
-      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${(vars:exists(kunde) && (!kunde.isKunde()))}]]></conditionExpression>
+      <conditionExpression xsi:type="tFormalExpression"><![CDATA[${(vars:exists(prospect) && (!prospect.isRecorded()))}]]></conditionExpression>
     </sequenceFlow>
     <exclusiveGateway id="exclusive_Databased_Gateway2">
       <extensionElements>
@@ -96,12 +96,13 @@
         <omgdc:Bounds height="80.0" width="100.0" x="255.0" y="236.0"></omgdc:Bounds>
       </bpmndi:BPMNShape>
       <bpmndi:BPMNEdge bpmnElement="sequenceFlow5" id="BPMNEdge_sequenceFlow5">
-        <omgdi:waypoint x="669.5591869398207" y="276.37820512820514"></omgdi:waypoint>
-        <omgdi:waypoint x="715.0002755524882" y="276.08885188426405"></omgdi:waypoint>
+        <omgdi:waypoint x="669.9157216494845" y="276.0"></omgdi:waypoint>
+        <omgdi:waypoint x="679.0" y="276.0"></omgdi:waypoint>
+        <omgdi:waypoint x="715.0" y="276.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sequenceFlow6" id="BPMNEdge_sequenceFlow6">
-        <omgdi:waypoint x="439.48722173722916" y="276.45851528384276"></omgdi:waypoint>
-        <omgdi:waypoint x="630.0434782608695" y="276.0433695652174"></omgdi:waypoint>
+        <omgdi:waypoint x="439.9456649282366" y="276.0"></omgdi:waypoint>
+        <omgdi:waypoint x="630.0" y="276.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sequenceFlow3" id="BPMNEdge_sequenceFlow3">
         <omgdi:waypoint x="419.8709677419355" y="295.8212903225807"></omgdi:waypoint>
@@ -109,9 +110,9 @@
         <omgdi:waypoint x="479.9999999999447" y="430.0"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sequenceFlow4" id="BPMNEdge_sequenceFlow4">
-        <omgdi:waypoint x="579.95" y="430.0"></omgdi:waypoint>
-        <omgdi:waypoint x="650.5" y="430.0"></omgdi:waypoint>
-        <omgdi:waypoint x="650.5" y="295.4061440677966"></omgdi:waypoint>
+        <omgdi:waypoint x="579.9499999998391" y="430.0"></omgdi:waypoint>
+        <omgdi:waypoint x="650.0" y="430.0"></omgdi:waypoint>
+        <omgdi:waypoint x="650.0" y="295.9064489928525"></omgdi:waypoint>
       </bpmndi:BPMNEdge>
       <bpmndi:BPMNEdge bpmnElement="sequenceFlow1" id="BPMNEdge_sequenceFlow1">
         <omgdi:waypoint x="146.9499993892985" y="276.0"></omgdi:waypoint>
