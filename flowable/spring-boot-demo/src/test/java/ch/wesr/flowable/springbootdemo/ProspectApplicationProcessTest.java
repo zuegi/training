@@ -1,12 +1,11 @@
 package ch.wesr.flowable.springbootdemo;
 
 
-import ch.wesr.flowable.springbootdemo.processor.dto.AbstractKunde;
-import ch.wesr.flowable.springbootdemo.processor.dto.AcsMsKunde;
+import ch.wesr.flowable.springbootdemo.processor.dto.Prospect;
+import org.flowable.engine.FormService;
 import org.flowable.engine.HistoryService;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
-import org.flowable.engine.history.HistoricActivityInstance;
 import org.flowable.engine.runtime.ProcessInstance;
 import org.flowable.engine.test.Deployment;
 import org.flowable.task.api.Task;
@@ -14,19 +13,18 @@ import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import static ch.wesr.flowable.springbootdemo.processor.dto.AcsMsKunde.VALID_KUNDE;
-import static org.hamcrest.MatcherAssert.assertThat;
+import static ch.wesr.flowable.springbootdemo.processor.dto.Prospect.VALID_KUNDE;
 import static org.hamcrest.CoreMatchers.*;
+import static org.hamcrest.MatcherAssert.assertThat;
 import static org.junit.jupiter.api.Assertions.assertTrue;
 
 
 public class ProspectApplicationProcessTest extends SpringBootDemoTestConfiguration{
 
     public static final String PROSPECT_APPLICATION = "prospectApplication";
-    public static final String NOT_FOUND_PROSPECT = "Rene";
+    public static final String NOT_FOUND_PROSPECT = "René";
     public static final String FOUND_PROSPECT = "Paul";
 
     @Autowired
@@ -37,6 +35,9 @@ public class ProspectApplicationProcessTest extends SpringBootDemoTestConfigurat
 
     @Autowired
     private HistoryService historyService;
+
+    @Autowired
+    private FormService formService;
 
 
     @Test
@@ -60,8 +61,8 @@ public class ProspectApplicationProcessTest extends SpringBootDemoTestConfigurat
         Map<String, Object> processVariables = prospectApplication.getProcessVariables();
         Object object = processVariables.get("kunde");
         assertThat(object, is(notNullValue()));
-        assertTrue(object instanceof AcsMsKunde);
-        AcsMsKunde kunde = (AcsMsKunde) object;
+        assertTrue(object instanceof Prospect);
+        Prospect kunde = (Prospect) object;
         assertThat(kunde.getVorname(), is(VALID_KUNDE.getVorname()));
         assertThat(kunde.getNachname(), is(VALID_KUNDE.getNachname()));
         assertThat(kunde.getStrasse(), is(VALID_KUNDE.getStrasse()));
@@ -83,7 +84,10 @@ public class ProspectApplicationProcessTest extends SpringBootDemoTestConfigurat
     @Deployment
     public void testProcessWithProspectNotFoundInUmsystem() {
         // given Map<String, Object> prospectProcessVariables
-        AcsMsKunde manKunde = manuallyRecordedKunde();
+        Prospect manKunde = manuallyRecordedKunde();
+
+        Map<String, Object> mapManuellerKunde = new HashMap<>();
+        mapManuellerKunde.put("kunde", manKunde);
 
         // when
         ProcessInstance prospectApplication = startProcessInstance(NOT_FOUND_PROSPECT);
@@ -94,35 +98,46 @@ public class ProspectApplicationProcessTest extends SpringBootDemoTestConfigurat
         assertThat(processInstanceId, is(notNullValue()));
         // der User Task muss aufpoppen
         Task task = taskService.createTaskQuery().active().singleResult();
+        assertThat(1L, is(runtimeService.createProcessInstanceQuery().count()));
         assertThat("Fill Prospect manually", equalTo(task.getName()));
 
-        // wie kann ich dem Test die User Task Form Variablen übergeben und danach kunde abfragen
+        Object object = taskService.getVariable(task.getId(), "kunde");
+        assertThat(object, is(notNullValue()));
+        assertTrue(object instanceof Prospect);
+        Prospect kunde = (Prospect) object;
+        kunde.setNachname(manKunde.getNachname());
+        kunde.setStrasse(manKunde.getStrasse());
+        kunde.setPlz(manKunde.getPlz());
+        kunde.setOrt(manKunde.getOrt());
 
+        Map<String, Object> mapKunde = new HashMap<>();
+        mapKunde.put("kunde", kunde);
+
+        taskService.setVariables(task.getId(),mapKunde);
         taskService.complete(task.getId());
-        long count = runtimeService.createProcessInstanceQuery().count();
-        System.out.println("count: " +count);
-        assertThat(0L, equalTo(count));
+        // no other tasks are to do
+        assertThat(0L, equalTo(runtimeService.createProcessInstanceQuery().count()));
 
         Map<String, Object> processVariables = prospectApplication.getProcessVariables();
-        Object object = processVariables.get("kunde");
-        assertThat(object, is(notNullValue()));
-        assertTrue(object instanceof AcsMsKunde);
-        AcsMsKunde kunde = (AcsMsKunde) object;
-        assertThat(kunde.getVorname(), is(manKunde.getVorname()));
-        assertThat(kunde.getNachname(), is(manKunde.getNachname()));
-        assertThat(kunde.getStrasse(), is(manKunde.getStrasse()));
-        assertThat(kunde.getPlz(), is(manKunde.getPlz()));
-        assertThat(kunde.getOrt(), is(manKunde.getOrt()));
+        Object objectKunde = processVariables.get("kunde");
+        assertThat(objectKunde, is(notNullValue()));
+        assertTrue(objectKunde instanceof Prospect);
+        Prospect acsKunde = (Prospect) object;
+        assertThat(acsKunde.getVorname(), is(manKunde.getVorname()));
+        assertThat(acsKunde.getNachname(), is(manKunde.getNachname()));
+        assertThat(acsKunde.getStrasse(), is(manKunde.getStrasse()));
+        assertThat(acsKunde.getPlz(), is(manKunde.getPlz()));
+        assertThat(acsKunde.getOrt(), is(manKunde.getOrt()));
     }
 
-    private AcsMsKunde manuallyRecordedKunde() {
-        AcsMsKunde acsMsKunde = new AcsMsKunde();
-        acsMsKunde.setVorname("René");
-        acsMsKunde.setNachname("Arnoux");
-        acsMsKunde.setStrasse("Rue de la gar");
-        acsMsKunde.setPlz("91788");
-        acsMsKunde.setOrt("Paris");
-        return acsMsKunde;
+    private Prospect manuallyRecordedKunde() {
+        Prospect prospect = new Prospect();
+        prospect.setVorname("René");
+        prospect.setNachname("Arnoux");
+        prospect.setStrasse("Rue de la gar");
+        prospect.setPlz("91788");
+        prospect.setOrt("Paris");
+        return prospect;
     }
 
     private ProcessInstance startProcessInstance(String notFoundProspect) {
