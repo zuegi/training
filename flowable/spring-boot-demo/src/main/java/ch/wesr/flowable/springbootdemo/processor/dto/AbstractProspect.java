@@ -14,11 +14,11 @@ public abstract class AbstractProspect implements Serializable {
 
 
     private static final long serialVersionUID = 4433188986504128663L;
-    String vorname;
-    String nachname;
-    String strasse;
-    String plz;
-    String ort;
+    protected String vorname;
+    protected String nachname;
+    protected String strasse;
+    protected String plz;
+    protected String ort;
 
 
     public boolean isRecorded() {

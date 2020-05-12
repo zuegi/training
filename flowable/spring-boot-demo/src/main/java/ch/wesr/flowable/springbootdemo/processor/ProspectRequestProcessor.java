@@ -6,6 +6,8 @@ import org.flowable.engine.delegate.DelegateExecution;
 import org.flowable.engine.delegate.JavaDelegate;
 import org.springframework.stereotype.Component;
 
+import java.util.Map;
+
 @Slf4j
 @Component
 public class ProspectRequestProcessor implements JavaDelegate {
@@ -18,6 +20,8 @@ public class ProspectRequestProcessor implements JavaDelegate {
      */
     @Override
     public void execute(DelegateExecution delegateExecution) {
+        Map<String, Object> variables = delegateExecution.getVariables();
+        log.info("variables: " + variables.toString());
         String prospectName = delegateExecution.getVariable("prospectName", String.class);
         log.info("Wir suchen nach dem Prospect: {} ", prospectName);
         ProspectDto prospectDto;
