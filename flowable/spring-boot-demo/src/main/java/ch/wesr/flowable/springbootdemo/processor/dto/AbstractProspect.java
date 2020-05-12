@@ -10,7 +10,7 @@ import java.io.Serializable;
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public abstract class AbstractKunde implements Serializable {
+public abstract class AbstractProspect implements Serializable {
 
 
     private static final long serialVersionUID = 4433188986504128663L;

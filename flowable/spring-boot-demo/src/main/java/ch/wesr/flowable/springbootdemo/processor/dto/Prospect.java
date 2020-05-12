@@ -1,7 +1,7 @@
 package ch.wesr.flowable.springbootdemo.processor.dto;
 
 
-public class Prospect extends AbstractKunde {
+public class Prospect extends AbstractProspect {
 
     public static final String PAUL = "Paul";
     public static final Prospect VALID_KUNDE = erstelleKunde(PAUL);
