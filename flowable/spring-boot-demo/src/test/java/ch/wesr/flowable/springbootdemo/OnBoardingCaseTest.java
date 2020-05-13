@@ -59,6 +59,11 @@ public class OnBoardingCaseTest extends SpringBootDemoTestConfiguration {
 
         List<Task> list = taskService.createTaskQuery().active().list();
         assertThat(list, hasSize(2));
+        /*
+            ok der Fakt, dass wir hier 2 Tasks haben, heisst das die Onboarding enhance "aktiv" ist
+            und die hat ein Eintrittskriterium, das die Variable prospect existieren soll
+            Trotzdem habe ich es noch nicht geschafft diese Variable aus dem Task herauszulesen.
+        */
 //        Task fillProspectManuallyTask = list.stream()
 //                .filter(task -> task.getName().equals("Fill Prospect manually")).map(task -> task).collect(Collectors.toList()).get(0);
         Task enhanceWithSwiftKeyTask = list.stream()
