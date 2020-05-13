@@ -2,20 +2,21 @@
 <definitions xmlns="http://www.omg.org/spec/CMMN/20151109/MODEL" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:flowable="http://flowable.org/cmmn" xmlns:cmmndi="http://www.omg.org/spec/CMMN/20151109/CMMNDI" xmlns:dc="http://www.omg.org/spec/CMMN/20151109/DC" xmlns:di="http://www.omg.org/spec/CMMN/20151109/DI" xmlns:design="http://flowable.org/design" targetNamespace="http://flowable.org/cmmn">
   <case id="onBoardingTM" name="OnBoardingTM" flowable:initiatorVariableName="initiator" flowable:candidateStarterGroups="flowableUser">
     <documentation>Der Ort an dem der gesamten OnBoarding Prozess zusammengehalten wird.</documentation>
-    <casePlanModel id="onecaseplanmodel1" name="Case plan model" flowable:formKey="prospectName" flowable:formFieldValidation="false">
+    <casePlanModel id="onecaseplanmodel1" name="Case plan model" flowable:formKey="prospectName" flowable:formFieldValidation="false" autoComplete="true">
       <extensionElements>
         <flowable:work-form-field-validation><![CDATA[false]]></flowable:work-form-field-validation>
         <flowable:workformkey><![CDATA[prospectName]]></flowable:workformkey>
+        <flowable:static-work-form-key><![CDATA[prospectName]]></flowable:static-work-form-key>
         <design:stencilid><![CDATA[CasePlanModel]]></design:stencilid>
       </extensionElements>
-      <planItem id="planItem5" name="OnBoarding request" definitionRef="expandedStage1">
+      <planItem id="planItem3" name="OnBoarding initialize" definitionRef="expandedStage1">
         <itemControl>
           <extensionElements>
             <flowable:completionNeutralRule></flowable:completionNeutralRule>
           </extensionElements>
         </itemControl>
       </planItem>
-      <planItem id="planItem6" name="OnBoarding risk" definitionRef="expandedStage2">
+      <planItem id="planItem6" name="OnBoarding enhance" definitionRef="expandedStage2">
         <entryCriterion id="entryCriterion4" sentryRef="sentry3"></entryCriterion>
       </planItem>
       <planItem id="planItem7" name="OnBoarding approve" definitionRef="expandedStage3">
@@ -25,55 +26,42 @@
         <extensionElements>
           <design:stencilid><![CDATA[ExitCriterion]]></design:stencilid>
         </extensionElements>
-        <planItemOnPart id="sentryOnPart1" sourceRef="planItem4">
+        <planItemOnPart id="sentryOnPart1" sourceRef="planItem2">
           <standardEvent>occur</standardEvent>
         </planItemOnPart>
       </sentry>
       <sentry id="sentry3">
         <extensionElements>
+          <flowable:condition group="true" match="all" targetAttribute="condition">
+            <flowable:condition sourceVariableType="outcome" sourceName="prospect" sourceType="string" operator="vars:exists"></flowable:condition>
+          </flowable:condition>
           <design:stencilid><![CDATA[EntryCriterion]]></design:stencilid>
         </extensionElements>
-        <planItemOnPart id="sentryOnPart2" sourceRef="planItem5">
+        <planItemOnPart id="sentryOnPart2" sourceRef="planItem3">
           <standardEvent>complete</standardEvent>
         </planItemOnPart>
+        <ifPart>
+          <condition><![CDATA[${vars:exists(prospect)}]]></condition>
+        </ifPart>
       </sentry>
       <sentry id="sentry2">
         <extensionElements>
           <design:stencilid><![CDATA[EntryCriterion]]></design:stencilid>
         </extensionElements>
-        <planItemOnPart id="sentryOnPart3" sourceRef="planItem6">
-          <standardEvent>complete</standardEvent>
-        </planItemOnPart>
       </sentry>
-      <stage id="expandedStage1" name="OnBoarding request" flowable:includeInStageOverview="true">
+      <stage id="expandedStage1" name="OnBoarding initialize" autoComplete="true" flowable:includeInStageOverview="true">
         <extensionElements>
           <design:stencilid><![CDATA[ExpandedStage]]></design:stencilid>
           <design:completionneutral><![CDATA[true]]></design:completionneutral>
         </extensionElements>
-        <planItem id="planItem1" name="Enhance with SwiftKey" definitionRef="enhanceWithSwiftKey">
+        <planItem id="planItem1" name="Find prospect" definitionRef="processTask2"></planItem>
+        <planItem id="planItem2" name="Cancel OnBoarding" definitionRef="userEventListener1">
           <itemControl>
             <extensionElements>
               <flowable:completionNeutralRule></flowable:completionNeutralRule>
             </extensionElements>
           </itemControl>
         </planItem>
-        <planItem id="planItem2" name="Find prospect" definitionRef="processTask2"></planItem>
-        <planItem id="planItem3" name="Enhance with Identifikation Documents" definitionRef="enhanceWithIdentifikationDokuments"></planItem>
-        <planItem id="planItem4" name="Cancel OnBoarding" definitionRef="userEventListener1">
-          <itemControl>
-            <extensionElements>
-              <flowable:completionNeutralRule></flowable:completionNeutralRule>
-            </extensionElements>
-          </itemControl>
-        </planItem>
-        <humanTask id="enhanceWithSwiftKey" name="Enhance with SwiftKey" flowable:assignee="${initiator}" flowable:formKey="swiftKeyForm" flowable:formFieldValidation="false">
-          <extensionElements>
-            <flowable:task-candidates-type><![CDATA[all]]></flowable:task-candidates-type>
-            <design:stencilid><![CDATA[HumanTask]]></design:stencilid>
-            <design:stencilsuperid><![CDATA[Task]]></design:stencilsuperid>
-            <design:completionneutral><![CDATA[true]]></design:completionneutral>
-          </extensionElements>
-        </humanTask>
         <processTask id="processTask2" name="Find prospect" flowable:fallbackToDefaultTenant="true" flowable:sameDeployment="true">
           <extensionElements>
             <design:stencilid><![CDATA[ProcessTask]]></design:stencilid>
@@ -84,13 +72,6 @@
           </extensionElements>
           <processRefExpression><![CDATA[prospectApplication]]></processRefExpression>
         </processTask>
-        <humanTask id="enhanceWithIdentifikationDokuments" name="Enhance with Identifikation Documents" flowable:assignee="${initiator}" flowable:formFieldValidation="false">
-          <extensionElements>
-            <flowable:task-candidates-type><![CDATA[all]]></flowable:task-candidates-type>
-            <design:stencilid><![CDATA[HumanTask]]></design:stencilid>
-            <design:stencilsuperid><![CDATA[Task]]></design:stencilsuperid>
-          </extensionElements>
-        </humanTask>
         <userEventListener id="userEventListener1" name="Cancel OnBoarding">
           <extensionElements>
             <design:stencilid><![CDATA[UserEventListener]]></design:stencilid>
@@ -99,12 +80,36 @@
           </extensionElements>
         </userEventListener>
       </stage>
-      <stage id="expandedStage2" name="OnBoarding risk" flowable:includeInStageOverview="true">
+      <stage id="expandedStage2" name="OnBoarding enhance" autoComplete="true" flowable:includeInStageOverview="true">
         <extensionElements>
           <design:stencilid><![CDATA[ExpandedStage]]></design:stencilid>
         </extensionElements>
+        <planItem id="planItem4" name="Enhance with SwiftKey" definitionRef="enhanceWithSwiftKey">
+          <itemControl>
+            <extensionElements>
+              <flowable:completionNeutralRule></flowable:completionNeutralRule>
+            </extensionElements>
+            <requiredRule></requiredRule>
+          </itemControl>
+        </planItem>
+        <planItem id="planItem5" name="Enhance with Identifikation Documents" definitionRef="enhanceWithIdentifikationDokuments"></planItem>
+        <humanTask id="enhanceWithSwiftKey" name="Enhance with SwiftKey" flowable:assignee="${initiator}" flowable:formKey="swiftKeyForm" flowable:formFieldValidation="false">
+          <extensionElements>
+            <flowable:task-candidates-type><![CDATA[all]]></flowable:task-candidates-type>
+            <design:stencilid><![CDATA[HumanTask]]></design:stencilid>
+            <design:stencilsuperid><![CDATA[Task]]></design:stencilsuperid>
+            <design:completionneutral><![CDATA[true]]></design:completionneutral>
+          </extensionElements>
+        </humanTask>
+        <humanTask id="enhanceWithIdentifikationDokuments" name="Enhance with Identifikation Documents" flowable:assignee="${initiator}" flowable:formFieldValidation="false">
+          <extensionElements>
+            <flowable:task-candidates-type><![CDATA[all]]></flowable:task-candidates-type>
+            <design:stencilid><![CDATA[HumanTask]]></design:stencilid>
+            <design:stencilsuperid><![CDATA[Task]]></design:stencilsuperid>
+          </extensionElements>
+        </humanTask>
       </stage>
-      <stage id="expandedStage3" name="OnBoarding approve" flowable:includeInStageOverview="true">
+      <stage id="expandedStage3" name="OnBoarding approve" autoComplete="true" flowable:includeInStageOverview="true">
         <extensionElements>
           <design:stencilid><![CDATA[ExpandedStage]]></design:stencilid>
         </extensionElements>
@@ -115,66 +120,57 @@
   <cmmndi:CMMNDI>
     <cmmndi:CMMNDiagram id="CMMNDiagram_onBoardingTM">
       <cmmndi:CMMNShape id="CMMNShape_onecaseplanmodel1" cmmnElementRef="onecaseplanmodel1">
-        <dc:Bounds height="855.0" width="1017.0" x="0.0" y="0.0"></dc:Bounds>
+        <dc:Bounds height="855.0" width="1026.0" x="0.0" y="0.0"></dc:Bounds>
         <cmmndi:CMMNLabel></cmmndi:CMMNLabel>
       </cmmndi:CMMNShape>
       <cmmndi:CMMNShape id="CMMNShape_exitCriterion1" cmmnElementRef="exitCriterion1">
-        <dc:Bounds height="28.0" width="18.0" x="1008.0" y="191.0"></dc:Bounds>
-        <cmmndi:CMMNLabel></cmmndi:CMMNLabel>
-      </cmmndi:CMMNShape>
-      <cmmndi:CMMNShape id="CMMNShape_planItem5" cmmnElementRef="planItem5">
-        <dc:Bounds height="255.0" width="720.0" x="105.0" y="90.0"></dc:Bounds>
-        <cmmndi:CMMNLabel></cmmndi:CMMNLabel>
-      </cmmndi:CMMNShape>
-      <cmmndi:CMMNShape id="CMMNShape_planItem1" cmmnElementRef="planItem1">
-        <dc:Bounds height="80.0" width="100.0" x="315.0" y="137.12525"></dc:Bounds>
-        <cmmndi:CMMNLabel></cmmndi:CMMNLabel>
-      </cmmndi:CMMNShape>
-      <cmmndi:CMMNShape id="CMMNShape_planItem2" cmmnElementRef="planItem2">
-        <dc:Bounds height="80.0" width="100.0" x="150.0" y="137.12525"></dc:Bounds>
+        <dc:Bounds height="28.0" width="18.0" x="1017.0" y="106.0"></dc:Bounds>
         <cmmndi:CMMNLabel></cmmndi:CMMNLabel>
       </cmmndi:CMMNShape>
       <cmmndi:CMMNShape id="CMMNShape_planItem3" cmmnElementRef="planItem3">
-        <dc:Bounds height="80.0" width="100.0" x="150.0" y="241.0"></dc:Bounds>
+        <dc:Bounds height="135.0" width="717.3162162162162" x="105.18378378378378" y="45.0"></dc:Bounds>
         <cmmndi:CMMNLabel></cmmndi:CMMNLabel>
       </cmmndi:CMMNShape>
-      <cmmndi:CMMNShape id="CMMNShape_planItem4" cmmnElementRef="planItem4">
-        <dc:Bounds height="30.500999999999976" width="30.498000000000047" x="690.0" y="189.7495"></dc:Bounds>
+      <cmmndi:CMMNShape id="CMMNShape_planItem1" cmmnElementRef="planItem1">
+        <dc:Bounds height="80.0" width="100.0" x="240.0" y="72.5"></dc:Bounds>
+        <cmmndi:CMMNLabel></cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="CMMNShape_planItem2" cmmnElementRef="planItem2">
+        <dc:Bounds height="30.50099999999999" width="30.49799999999999" x="690.1837837837838" y="104.7495"></dc:Bounds>
         <cmmndi:CMMNLabel></cmmndi:CMMNLabel>
       </cmmndi:CMMNShape>
       <cmmndi:CMMNShape id="CMMNShape_planItem6" cmmnElementRef="planItem6">
-        <dc:Bounds height="105.0" width="285.0" x="322.5" y="540.0"></dc:Bounds>
+        <dc:Bounds height="150.0" width="717.3162162162162" x="105.18378378378378" y="240.0"></dc:Bounds>
         <cmmndi:CMMNLabel></cmmndi:CMMNLabel>
       </cmmndi:CMMNShape>
       <cmmndi:CMMNShape id="CMMNShape_entryCriterion4" cmmnElementRef="entryCriterion4">
-        <dc:Bounds height="28.0" width="18.0" x="456.0" y="526.0"></dc:Bounds>
+        <dc:Bounds height="28.0" width="18.0" x="447.2108683151236" y="226.0"></dc:Bounds>
+        <cmmndi:CMMNLabel></cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="CMMNShape_planItem4" cmmnElementRef="planItem4">
+        <dc:Bounds height="80.0" width="100.0" x="210.0" y="285.0"></dc:Bounds>
+        <cmmndi:CMMNLabel></cmmndi:CMMNLabel>
+      </cmmndi:CMMNShape>
+      <cmmndi:CMMNShape id="CMMNShape_planItem5" cmmnElementRef="planItem5">
+        <dc:Bounds height="80.0" width="100.0" x="345.0" y="285.0"></dc:Bounds>
         <cmmndi:CMMNLabel></cmmndi:CMMNLabel>
       </cmmndi:CMMNShape>
       <cmmndi:CMMNShape id="CMMNShape_planItem7" cmmnElementRef="planItem7">
-        <dc:Bounds height="93.0" width="297.0" x="321.5" y="735.0"></dc:Bounds>
+        <dc:Bounds height="180.0" width="717.3162162162162" x="105.18378378378378" y="480.0"></dc:Bounds>
         <cmmndi:CMMNLabel></cmmndi:CMMNLabel>
       </cmmndi:CMMNShape>
       <cmmndi:CMMNShape id="CMMNShape_entryCriterion3" cmmnElementRef="entryCriterion3">
-        <dc:Bounds height="28.0" width="18.0" x="456.1837837837838" y="721.0"></dc:Bounds>
+        <dc:Bounds height="28.0" width="18.0" x="443.2097370343316" y="466.0"></dc:Bounds>
         <cmmndi:CMMNLabel></cmmndi:CMMNLabel>
       </cmmndi:CMMNShape>
-      <cmmndi:CMMNEdge id="CMMNEdge_connector1" cmmnElementRef="planItem4" targetCMMNElementRef="exitCriterion1">
-        <di:waypoint x="719.9499932161857" y="204.76150328919846"></di:waypoint>
-        <di:waypoint x="1008.0" y="204.9927777661461"></di:waypoint>
+      <cmmndi:CMMNEdge id="CMMNEdge_connector1" cmmnElementRef="planItem2" targetCMMNElementRef="exitCriterion1">
+        <di:waypoint x="720.1337773677503" y="119.7611732703981"></di:waypoint>
+        <di:waypoint x="1017.0" y="119.99297613775919"></di:waypoint>
         <cmmndi:CMMNLabel></cmmndi:CMMNLabel>
       </cmmndi:CMMNEdge>
-      <cmmndi:CMMNEdge id="CMMNEdge_connector4" cmmnElementRef="planItem6" targetCMMNElementRef="entryCriterion3">
-        <di:waypoint x="465.0" y="644.9499999999999"></di:waypoint>
-        <di:waypoint x="465.0" y="690.0"></di:waypoint>
-        <di:waypoint x="465.1837837837838" y="690.0"></di:waypoint>
-        <di:waypoint x="465.1837837837838" y="721.0"></di:waypoint>
-        <cmmndi:CMMNLabel></cmmndi:CMMNLabel>
-      </cmmndi:CMMNEdge>
-      <cmmndi:CMMNEdge id="CMMNEdge_connector5" cmmnElementRef="planItem5" targetCMMNElementRef="entryCriterion4">
-        <di:waypoint x="465.0" y="344.95"></di:waypoint>
-        <di:waypoint x="465.0" y="442.5"></di:waypoint>
-        <di:waypoint x="465.0" y="442.5"></di:waypoint>
-        <di:waypoint x="465.0" y="526.0"></di:waypoint>
+      <cmmndi:CMMNEdge id="CMMNEdge_connector5" cmmnElementRef="planItem3" targetCMMNElementRef="entryCriterion4">
+        <di:waypoint x="456.1837837837838" y="180.0"></di:waypoint>
+        <di:waypoint x="456.20455302568723" y="226.0"></di:waypoint>
         <cmmndi:CMMNLabel></cmmndi:CMMNLabel>
       </cmmndi:CMMNEdge>
     </cmmndi:CMMNDiagram>
