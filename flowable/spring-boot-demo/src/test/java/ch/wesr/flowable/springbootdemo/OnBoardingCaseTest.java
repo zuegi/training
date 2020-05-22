@@ -70,6 +70,7 @@ public class OnBoardingCaseTest extends SpringBootDemoTestConfiguration {
                 .filter(task -> task.getTaskDefinitionKey().equals("enhanceWithSwiftKey")).map(task -> task).collect(Collectors.toList()).get(0);
 
         Map<String, Object> enhanceWithSwiftTaskVariables = taskService.getVariables(enhanceWithSwiftKeyTask.getId());
+        assertThat(enhanceWithSwiftTaskVariables.isEmpty(), is(false));
         log.info("Enhance Swift Task Variables: {}", enhanceWithSwiftTaskVariables.toString());
 
         seeWhatHappens(caseInstance);

@@ -1,6 +1,7 @@
 package ch.wesr.flowable.springbootdemo.service;
 
 import org.flowable.engine.HistoryService;
+import org.flowable.engine.RepositoryService;
 import org.flowable.engine.RuntimeService;
 import org.flowable.engine.TaskService;
 import org.flowable.engine.history.HistoricActivityInstance;
@@ -11,9 +12,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.zip.ZipInputStream;
 
 @Service
 public class ProspectService {
@@ -26,6 +30,9 @@ public class ProspectService {
 
     @Autowired
     HistoryService historyService;
+
+    @Autowired
+    RepositoryService repositoryService;
 
     private static Map<String, Object> prospectProcessVariables;
 
@@ -62,5 +69,20 @@ public class ProspectService {
 
     public List<Execution> listActiveProcesses() {
         return runtimeService.createExecutionQuery().startedBy("flowfest").list();
+    }
+
+    public void deploy(String uploadFileName) {
+
+        ZipInputStream inputStream = null;
+        try {
+            inputStream = new ZipInputStream(new FileInputStream(uploadFileName));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        repositoryService.createDeployment()
+                .name(uploadFileName)
+                .addZipInputStream(inputStream)
+                .deploy();
     }
 }

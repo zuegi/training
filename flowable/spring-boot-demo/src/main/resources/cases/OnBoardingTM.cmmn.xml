@@ -34,6 +34,7 @@
         <extensionElements>
           <flowable:condition group="true" match="all" targetAttribute="condition">
             <flowable:condition sourceVariableType="outcome" sourceName="prospect" sourceType="string" operator="vars:exists"></flowable:condition>
+            <flowable:condition expressionValue="prospect.isRecorded()"></flowable:condition>
           </flowable:condition>
           <design:stencilid><![CDATA[EntryCriterion]]></design:stencilid>
         </extensionElements>
@@ -41,7 +42,7 @@
           <standardEvent>complete</standardEvent>
         </planItemOnPart>
         <ifPart>
-          <condition><![CDATA[${vars:exists(prospect)}]]></condition>
+          <condition><![CDATA[${vars:exists(prospect) && (prospect.isRecorded())}]]></condition>
         </ifPart>
       </sentry>
       <sentry id="sentry2">
@@ -96,6 +97,8 @@
         <humanTask id="enhanceWithSwiftKey" name="Enhance with SwiftKey" flowable:assignee="${initiator}" flowable:formKey="swiftKeyForm" flowable:formFieldValidation="false">
           <extensionElements>
             <flowable:task-candidates-type><![CDATA[all]]></flowable:task-candidates-type>
+            <flowable:element-rendering exposeToCaseView="true"></flowable:element-rendering>
+            <flowable:state-rendering available="readOnly" active="fullAccess" completed="hidden" terminated="hidden"></flowable:state-rendering>
             <design:stencilid><![CDATA[HumanTask]]></design:stencilid>
             <design:stencilsuperid><![CDATA[Task]]></design:stencilsuperid>
             <design:completionneutral><![CDATA[true]]></design:completionneutral>

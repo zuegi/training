@@ -23,21 +23,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-        http
-                .authorizeRequests()
-                .requestMatchers(EndpointRequest.to(InfoEndpoint.class, HealthEndpoint.class)).permitAll()
-                .requestMatchers(EndpointRequest.toAnyEndpoint()).hasRole("ACTUATOR")
-                .antMatchers("/*-api/**").hasRole("REST")
-                .anyRequest().authenticated()
-                .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER).and()
-                .csrf().disable()
-                .httpBasic();
+//        http
+//                .authorizeRequests()
+//                .requestMatchers(EndpointRequest.to(InfoEndpoint.class, HealthEndpoint.class)).permitAll()
+//                .requestMatchers(EndpointRequest.toAnyEndpoint()).hasRole("ACTUATOR")
+//                .antMatchers("/*-api/**").hasRole("REST")
+//                .anyRequest().authenticated()
+//                .and()
+//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER).and()
+//                .csrf().disable()
+//                .httpBasic();
 
         //  Refused to display 'http://localhost:8080/xxx/xxx/upload-image?CKEditor=text&CKEditorFuncNum=1&langCode=ru'
         //  in a frame because it set 'X-Frame-Options' to 'DENY'.
         //  in h2-console
         http.headers().frameOptions().sameOrigin();
+        // cors
+        http.cors().configurationSource(corsConfiguratonSource());
+
+        // csrf
+        http.csrf().disable();
     }
 
     private CorsConfigurationSource corsConfiguratonSource() {
