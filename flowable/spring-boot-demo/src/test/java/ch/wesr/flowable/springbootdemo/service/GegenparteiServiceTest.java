@@ -81,7 +81,7 @@ class GegenparteiServiceTest extends SpringBootDemoTestConfiguration {
     @Test
     public void findBySearchkeyC() {
         String searchKey = "c";
-        findBySearchKey(searchKey, 2);
+        findBySearchKey(searchKey, 3);
     }
 
 
