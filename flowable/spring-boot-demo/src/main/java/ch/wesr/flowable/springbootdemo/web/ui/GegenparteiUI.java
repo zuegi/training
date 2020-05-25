@@ -19,6 +19,6 @@ public class GegenparteiUI {
     private String ort;
     private String land;
     private boolean prospect;
-    private String swiftCode;
+    private String swiftKey;
 
 }

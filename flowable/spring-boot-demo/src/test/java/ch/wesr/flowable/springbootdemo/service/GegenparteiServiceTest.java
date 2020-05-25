@@ -22,9 +22,9 @@ class GegenparteiServiceTest extends SpringBootDemoTestConfiguration {
                 .code("flawa")
                 .bezeichnung("Flawa AG")
                 .strasse("Wilerstrasse 5")
-                .plz(9230).ort("Flawil").land("Schweiz").swiftCode("FLAWCHF33")
+                .plz(9230).ort("Flawil").land("Schweiz").swiftKey("FLAWCHF33")
                 .build();
-        this.gegenparteiService.createGegenpartei(gegenparteiUI);
+        this.gegenparteiService.createOrGegenpartei(gegenparteiUI);
 
         assertThat(this.gegenparteiService.findBySearchKey("Botsberg"), is(empty()));
         gegenparteiUI.setStrasse("Botsberg 42");
@@ -41,9 +41,9 @@ class GegenparteiServiceTest extends SpringBootDemoTestConfiguration {
                 .code("flawa")
                 .bezeichnung("Flawa AG")
                 .strasse("Wilerstrasse 5")
-                .plz(9230).ort("Flawil").land("Schweiz").swiftCode("FLAWCHF33")
+                .plz(9230).ort("Flawil").land("Schweiz").swiftKey("FLAWCHF33")
                 .build();
-        this.gegenparteiService.createGegenpartei(gegenparteiUI);
+        this.gegenparteiService.createOrGegenpartei(gegenparteiUI);
     }
 
     @Test
@@ -53,11 +53,11 @@ class GegenparteiServiceTest extends SpringBootDemoTestConfiguration {
                 .code("flawa")
                 .bezeichnung("Flawa AG")
                 .strasse("Wilerstrasse 5")
-                .plz(9230).ort("Flawil").land("Schweiz").swiftCode("FLAWCHF33")
+                .plz(9230).ort("Flawil").land("Schweiz").swiftKey("FLAWCHF33")
                 .build();
-        assertThat(this.gegenparteiService.createGegenpartei(gegenparteiUI), is(nullValue()));
+        assertThat(this.gegenparteiService.createOrGegenpartei(gegenparteiUI), is(nullValue()));
         // und dann gleich nochmals
-        assertThat(gegenparteiUI, is(this.gegenparteiService.createGegenpartei(gegenparteiUI)));
+        assertThat(gegenparteiUI, is(this.gegenparteiService.createOrGegenpartei(gegenparteiUI)));
     }
 
     @Test

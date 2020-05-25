@@ -5,10 +5,12 @@ import com.fasterxml.jackson.databind.MappingIterator;
 import com.fasterxml.jackson.dataformat.csv.CsvMapper;
 import com.fasterxml.jackson.dataformat.csv.CsvSchema;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.Resource;
 import org.springframework.core.io.ResourceLoader;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.annotation.PostConstruct;
 import java.io.File;
@@ -41,12 +43,16 @@ public class GegenparteiService {
                         | gegenparteiUI.getStrasse().contains(searchKey)
                         | gegenparteiUI.getOrt().contains(searchKey)
                         | gegenparteiUI.getLand().contains(searchKey)
-                        | gegenparteiUI.getSwiftCode().contains(searchKey))
+                        | gegenparteiUI.getSwiftKey().contains(searchKey))
                 .collect(Collectors.toList());
     }
 
+    public GegenparteiUI createOrGegenpartei(GegenparteiUI gegenparteiUI) {
+        if (StringUtils.isEmpty(gegenparteiUI.getBezeichnung())) {
+            log.info("gegenpartei.getBezeichnung ist empty is empty");
+            return null;
+        }
 
-    public GegenparteiUI createGegenpartei(GegenparteiUI gegenparteiUI) {
         GegenparteiUI foundGegenpartei = this.gegenparteiUIList.stream()
                 .filter(gegenparteiUI1 -> gegenparteiUI1.getReferenzId().equals(gegenparteiUI.getReferenzId()))
                 .findFirst()
@@ -55,10 +61,18 @@ public class GegenparteiService {
         if (foundGegenpartei == null) {
             this.gegenparteiUIList.add(gegenparteiUI);
         } else {
-            log.error("Ooops, gibt es schon eine Gegenpartei mit ReferenzId: {}", gegenparteiUI.getReferenzId());
+            foundGegenpartei.setBezeichnung(gegenparteiUI.getBezeichnung());
+            foundGegenpartei.setReferenzId(gegenparteiUI.getReferenzId());
+            foundGegenpartei.setCode(gegenparteiUI.getCode());
+            foundGegenpartei.setLand(gegenparteiUI.getLand());
+            foundGegenpartei.setPlz(gegenparteiUI.getPlz());
+            foundGegenpartei.setOrt(gegenparteiUI.getOrt());
+            foundGegenpartei.setProspect(gegenparteiUI.isProspect());
+            foundGegenpartei.setSwiftKey(gegenparteiUI.getSwiftKey());
         }
         return foundGegenpartei;
     }
+
 
     public GegenparteiUI updateGegenpartei(String lookupId, GegenparteiUI gegenparteiUI) {
 
@@ -94,4 +108,6 @@ public class GegenparteiService {
                 return Collections.emptyList();
             }
     }
+
+
 }

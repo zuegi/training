@@ -33,14 +33,10 @@ public class GegenparteiResource {
     }
 
     @PostMapping
-    public ResponseEntity<GegenparteiUI> createGegenpartei(@RequestBody GegenparteiUI gegenparteiUI) {
-        log.info("Create Gegenpartei: {}", gegenparteiUI.toString());
-        return ResponseEntity.ok(gegenparteiService.createGegenpartei(gegenparteiUI));
+    public ResponseEntity<GegenparteiUI> createOrUpdateGegenpartei(@RequestBody GegenparteiUI gegenparteiUI) {
+        log.info("Create or Update Gegenpartei: {}", gegenparteiUI.toString());
+        return ResponseEntity.ok(gegenparteiService.createOrGegenpartei(gegenparteiUI));
     }
 
-    @PutMapping("/{lookupId}")
-    public ResponseEntity<GegenparteiUI> createGegenpartei(@PathVariable String lookupId, @RequestBody GegenparteiUI gegenparteiUI) {
-        return ResponseEntity.ok(gegenparteiService.updateGegenpartei(lookupId, gegenparteiUI));
-    }
 
 }
