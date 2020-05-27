@@ -1,0 +1,25 @@
+{
+  "name": "Flowable Demo",
+  "tenantKey": "demo",
+  "groups": [
+    {
+      "key": "flowableAdministrator",
+      "name": "Flowable Administrator"
+    },
+    {
+      "key": "flowableUser",
+      "name": "Flowable User"
+    }
+  ],
+  "users": [
+    {
+      "firstName": "Flowable",
+      "lastName": "Admin",
+      "login": "admin",
+      "email": "admin@demo.flowable.io",
+      "language": "en",
+      "theme": "flowable",
+      "userDefinitionKey": "admin"
+    }
+  ]
+}

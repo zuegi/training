@@ -1,79 +1,85 @@
 package ch.wesr.flowable.springbootdemo.config;
 
-import org.springframework.boot.actuate.autoconfigure.security.servlet.EndpointRequest;
-import org.springframework.boot.actuate.health.HealthEndpoint;
-import org.springframework.boot.actuate.info.InfoEndpoint;
+import org.springframework.beans.factory.ObjectProvider;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
+import org.springframework.core.annotation.Order;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
+import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configuration.WebSecurityConfigurerAdapter;
-import org.springframework.security.config.http.SessionCreationPolicy;
-import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.provisioning.InMemoryUserDetailsManager;
-import org.springframework.web.cors.CorsConfiguration;
-import org.springframework.web.cors.CorsConfigurationSource;
-import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
+import org.springframework.security.web.authentication.HttpStatusEntryPoint;
+import org.springframework.security.web.authentication.RememberMeServices;
+import org.springframework.security.web.authentication.logout.HttpStatusReturningLogoutSuccessHandler;
+import org.springframework.security.web.authentication.rememberme.AbstractRememberMeServices;
+import org.springframework.security.web.csrf.CookieCsrfTokenRepository;
+import org.springframework.security.web.util.matcher.AnyRequestMatcher;
+import org.springframework.security.web.util.matcher.RequestMatcher;
 
+import com.flowable.autoconfigure.security.FlowablePlatformSecurityProperties;
+import com.flowable.core.spring.security.web.authentication.AjaxAuthenticationFailureHandler;
+import com.flowable.core.spring.security.web.authentication.AjaxAuthenticationSuccessHandler;
+import com.flowable.platform.common.security.SecurityConstants;
 
 @Configuration
+@Order(10)
+@EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
+    @Autowired
+    protected ObjectProvider<RememberMeServices> rememberMeServicesObjectProvider;
+
+    @Autowired
+    protected FlowablePlatformSecurityProperties flowableSecurityProperties;
 
     @Override
     protected void configure(HttpSecurity http) throws Exception {
-//        http
-//                .authorizeRequests()
-//                .requestMatchers(EndpointRequest.to(InfoEndpoint.class, HealthEndpoint.class)).permitAll()
-//                .requestMatchers(EndpointRequest.toAnyEndpoint()).hasRole("ACTUATOR")
-//                .antMatchers("/*-api/**").hasRole("REST")
-//                .anyRequest().authenticated()
-//                .and()
-//                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.NEVER).and()
-//                .csrf().disable()
-//                .httpBasic();
+        RememberMeServices rememberMeServices = rememberMeServicesObjectProvider.getIfAvailable();
+        String key = null;
+        if (rememberMeServices instanceof AbstractRememberMeServices) {
+            key = ((AbstractRememberMeServices) rememberMeServices).getKey();
+        }
 
-        //  Refused to display 'http://localhost:8080/xxx/xxx/upload-image?CKEditor=text&CKEditorFuncNum=1&langCode=ru'
-        //  in a frame because it set 'X-Frame-Options' to 'DENY'.
-        //  in h2-console
-        http.headers().frameOptions().sameOrigin();
-        // cors
-        http.cors().configurationSource(corsConfiguratonSource());
+        if (flowableSecurityProperties.getRest().getCsrf().isEnabled()) {
+            http.csrf()
+                    .csrfTokenRepository(CookieCsrfTokenRepository.withHttpOnlyFalse())
+                    .ignoringRequestMatchers((RequestMatcher) request -> request.getHeader(HttpHeaders.AUTHORIZATION) != null);
+        } else {
+            http.csrf().disable();
+        }
 
-        // csrf
-        http.csrf().disable();
-    }
-
-    private CorsConfigurationSource corsConfiguratonSource() {
-        CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
-//        corsConfiguration.setAllowedOrigins(frontendUrls);
-        corsConfiguration.setAllowCredentials(true);
-        corsConfiguration.addAllowedMethod(HttpMethod.PUT);
-        corsConfiguration.addAllowedMethod(HttpMethod.POST);
-        corsConfiguration.addAllowedMethod(HttpMethod.DELETE);
-        corsConfiguration.addAllowedMethod(HttpMethod.GET);
-        corsConfiguration.addAllowedMethod(HttpMethod.OPTIONS);
-        corsConfiguration.addAllowedMethod(HttpMethod.HEAD);
-        corsConfiguration.addAllowedMethod(HttpMethod.PATCH);
-
-        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", corsConfiguration);
-        return source;
-    }
-
-
-    //@Bean
-    public UserDetailsService customUserDetailsService() {
-        UserDetails user1 = User.withUsername("custom-actuator")
-                .password("{noop}test")
-                .roles("ACTUATOR")
-                .build();
-
-        UserDetails user2 = User.withUsername("custom-rest")
-                .password("{noop}test")
-                .roles("REST")
-                .build();
-        return new InMemoryUserDetailsManager(user1, user2);
+        http
+                .headers().frameOptions().sameOrigin()
+                .and()
+                .rememberMe()
+                .key(key)
+                .rememberMeServices(rememberMeServicesObjectProvider.getIfAvailable())
+                .and()
+                .logout()
+                .logoutSuccessHandler(new HttpStatusReturningLogoutSuccessHandler())
+                .logoutUrl("/auth/logout")
+                .and()
+                .exceptionHandling()
+                .defaultAuthenticationEntryPointFor(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED), AnyRequestMatcher.INSTANCE)
+                .and()
+                .formLogin()
+                .loginProcessingUrl("/auth/login")
+                .successHandler(new AjaxAuthenticationSuccessHandler())
+                .failureHandler(new AjaxAuthenticationFailureHandler())
+                .and()
+                .authorizeRequests()
+                .antMatchers("/analytics-api/**").hasAuthority(SecurityConstants.ACCESS_REPORTS_METRICS)
+                .antMatchers("/template-api/**").hasAuthority(SecurityConstants.ACCESS_TEMPLATE_MANAGEMENT)
+                .antMatchers("/work-object-api/**").hasAuthority(SecurityConstants.ACCESS_WORKOBJECT_API)
+                // allow context root for all (it triggers the loading of the initial page)
+                .antMatchers("/").permitAll()
+                .antMatchers(
+                        "/**/*.svg", "/**/*.ico", "/**/*.png", "/**/*.woff2", "/**/*.css",
+                        "/**/*.woff", "/**/*.html", "/**/*.js",
+                        "/**/index.html").permitAll()
+                .anyRequest().authenticated()
+                .and()
+                .httpBasic();
     }
 }

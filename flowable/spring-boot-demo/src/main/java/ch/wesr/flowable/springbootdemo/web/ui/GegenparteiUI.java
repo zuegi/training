@@ -20,5 +20,6 @@ public class GegenparteiUI {
     private String land;
     private boolean prospect;
     private String swiftKey;
+    private String konzernStruktur;
 
 }

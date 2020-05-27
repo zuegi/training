@@ -1,5 +1,5 @@
-referenzId, bezeichnung, code, strasse, plz, ort, land, swiftKey
-1, RAIFFEISEN SCHWEIZ GENOSSENSCHAFT, raif, RAIFFEISENPLATZ 4, 9001, St. Gallen, Schweiz, RAIFCH22XXX
-2, BANCO SANTANDER S.A., sant, CIUDAD GRUPO SANTANDER EDIFICIO PAMPA CAMINO DE CANTABRIA S/N BAODILLA DEL MONTE, 28660, Madrid, Spanien, BSCHESMMXXX
-3, MACCORP EXACT CHANGE E.P. S.A., macc, ORENSE 6, 28020, Madrid, Spanien, EXCHESMMXXX
-4, BANCO SANTANDER S.A., sant, Santander Allee 1, 41061, Mönchengladbach, Deutschland, BSCHESMM123
+referenzId,bezeichnung,code,strasse,plz,ort,land,swiftKey,prospect
+1,RAIFFEISEN SCHWEIZ GENOSSENSCHAFT,raif,RAIFFEISENPLATZ 4,9001,St. Gallen,Schweiz,RAIFCH22XXX, false
+2,BANCO SANTANDER S.A.,sant,CIUDAD GRUPO SANTANDER EDIFICIO PAMPA CAMINO DE CANTABRIA S/N BAODILLA DEL MONTE,28660,Madrid,Spanien,BSCHESMMXXX,true
+3,MACCORP EXACT CHANGE E.P. S.A.,macc,ORENSE 6,28020,Madrid,Spanien,EXCHESMMXXX,false
+4,BANCO SANTANDER S.A., sant,Santander Allee 1,41061,Moenchengladbach,Deutschland,,true

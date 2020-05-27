@@ -1,0 +1,25 @@
+[
+  {
+    "key": "admin",
+    "name": "Flowable Administration User",
+    "allowedFeatures": [
+      "cases",
+      "changeContactPassword",
+      "changeOwnPassword",
+      "contacts",
+      "createUser",
+      "createWork",
+      "editContactAvatar",
+      "editOwnAvatar",
+      "processes",
+      "reports",
+      "reportsMetrics",
+      "tasks",
+      "templateManagement",
+      "websockets",
+      "work",
+      "actuators",
+      "user-mgmt"
+    ]
+  }
+]

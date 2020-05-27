@@ -18,6 +18,8 @@
         <java.version>11</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <flowable.version>6.5.0</flowable.version>
+        <com.flowable.platform.version>3.6.1</com.flowable.platform.version>
     </properties>
 
     <dependencies>
@@ -35,6 +37,45 @@
             <artifactId>spring-boot-starter-security</artifactId>
         </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>org.flowable</groupId>-->
+<!--            <artifactId>flowable-spring-boot-starter</artifactId>-->
+<!--            <version>${flowable.version}</version>-->
+<!--        </dependency>-->
+
+        <!-- Flowable Work Mandatory -->
+        <!-- =============== -->
+        <!-- REST and Java APIs to run headless Flowable Work -->
+        <dependency>
+            <groupId>com.flowable.platform</groupId>
+            <artifactId>flowable-spring-boot-starter-platform-rest</artifactId>
+        </dependency>
+
+        <!-- Flowable Work Recommended -->
+        <!-- =============== -->
+        <!-- Contains all Flowable Actuator and Spring Boot Actuator configuration -->
+        <dependency>
+            <groupId>com.flowable.platform</groupId>
+            <artifactId>flowable-spring-boot-starter-platform-actuator</artifactId>
+        </dependency>
+
+        <!-- Flowable Work Optional -->
+        <!-- =============== -->
+        <!-- Support loading users from a tenant json file -->
+        <dependency>
+            <groupId>com.flowable.platform</groupId>
+            <artifactId>flowable-tenant-setup</artifactId>
+        </dependency>
+        <!-- Default models provided by the product for Flowable Work -->
+        <dependency>
+            <groupId>com.flowable.platform</groupId>
+            <artifactId>flowable-platform-default-models</artifactId>
+        </dependency>
+        <!-- Flowabel  work frontend-->
+        <dependency>
+            <groupId>com.flowable.work</groupId>
+            <artifactId>flowable-work-frontend</artifactId>
+        </dependency>
 
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -86,6 +127,19 @@
         </dependency>
     </dependencies>
 
+    <dependencyManagement>
+        <dependencies>
+            <!-- Imports the bill-of-materials POM. -->
+            <dependency>
+                <groupId>com.flowable</groupId>
+                <artifactId>flowable-platform-bom</artifactId>
+                <version>${com.flowable.platform.version}</version>
+                <type>pom</type>
+                <scope>import</scope>
+            </dependency>
+        </dependencies>
+    </dependencyManagement>
+
     <build>
         <plugins>
             <plugin>
@@ -94,5 +148,17 @@
             </plugin>
         </plugins>
     </build>
+
+
+    <repositories>
+        <repository>
+            <snapshots>
+                <enabled>false</enabled>
+            </snapshots>
+            <id>rch-dev-cloud-flowable-repository</id>
+            <name>rch-dev-cloud Public Repository</name>
+            <url>https://nexus.rch.cloud/repository/maven-flowable</url>
+        </repository>
+    </repositories>
 
 </project>
