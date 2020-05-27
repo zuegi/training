@@ -2,6 +2,17 @@
   {
     "key": "admin",
     "name": "Flowable Administration User",
+    "initialUserSubType": "admin",
+    "initialState": "ACTIVE",
+    "initialSubState": "ACTIVE",
+    "memberGroups": [
+      "flowableUser",
+      "flowableAdministrator"
+    ],
+    "initialVariables": {
+      "adminUser": true,
+      "description": "Admin"
+    },
     "allowedFeatures": [
       "cases",
       "changeContactPassword",
