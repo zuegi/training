@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.core.annotation.Order;
 import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
@@ -21,6 +22,9 @@ import com.flowable.autoconfigure.security.FlowablePlatformSecurityProperties;
 import com.flowable.core.spring.security.web.authentication.AjaxAuthenticationFailureHandler;
 import com.flowable.core.spring.security.web.authentication.AjaxAuthenticationSuccessHandler;
 import com.flowable.platform.common.security.SecurityConstants;
+import org.springframework.web.cors.CorsConfiguration;
+import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @Configuration
 @Order(10)
@@ -69,6 +73,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .failureHandler(new AjaxAuthenticationFailureHandler())
                 .and()
                 .authorizeRequests()
+                .antMatchers("/api/**").permitAll()
                 .antMatchers("/analytics-api/**").hasAuthority(SecurityConstants.ACCESS_REPORTS_METRICS)
                 .antMatchers("/template-api/**").hasAuthority(SecurityConstants.ACCESS_TEMPLATE_MANAGEMENT)
                 .antMatchers("/work-object-api/**").hasAuthority(SecurityConstants.ACCESS_WORKOBJECT_API)
@@ -81,5 +86,26 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .anyRequest().authenticated()
                 .and()
                 .httpBasic();
+
+        // cors
+        http.cors().configurationSource(corsConfiguratonSource());
     }
+
+    private CorsConfigurationSource corsConfiguratonSource() {
+        CorsConfiguration corsConfiguration = new CorsConfiguration().applyPermitDefaultValues();
+//        corsConfiguration.setAllowedOrigins(frontendUrls);
+        corsConfiguration.setAllowCredentials(true);
+        corsConfiguration.addAllowedMethod(HttpMethod.PUT);
+        corsConfiguration.addAllowedMethod(HttpMethod.POST);
+        corsConfiguration.addAllowedMethod(HttpMethod.DELETE);
+        corsConfiguration.addAllowedMethod(HttpMethod.GET);
+        corsConfiguration.addAllowedMethod(HttpMethod.OPTIONS);
+        corsConfiguration.addAllowedMethod(HttpMethod.HEAD);
+        corsConfiguration.addAllowedMethod(HttpMethod.PATCH);
+
+        UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+        source.registerCorsConfiguration("/**/api/**", corsConfiguration);
+        return source;
+    }
+
 }
