@@ -1,0 +1,44 @@
+@import '~@flowable/work/theme.scss';
+
+body {
+  background-color: green;
+}
+
+
+.theme-my-custom-theme {
+  @include theme(
+        (
+                themeName: #color-goes-here,
+                textFg: #color-goes-here,
+                sidebarBg: #color-goes-here,
+                sidebarFg: #color-goes-here,
+                sidebarL1Bg: #color-goes-here,
+                sidebarL1Fg: #color-goes-here,
+                sidebarL2Bg: #color-goes-here,
+                sidebarL2Fg: #color-goes-here,
+                sidebarL2SelectedBg: #color-goes-here,
+                sidebarL2SelectedFg: #color-goes-here,
+                sidebarCreateBg: #color-goes-here,
+                avatarBg: #color-goes-here
+        )
+  );
+}
+
+.flowable {
+  @include theme(
+                  (
+                          themeName: #color-goes-here,
+                          textFg: #color-goes-here,
+                          sidebarBg: #color-goes-here,
+                          sidebarFg: #color-goes-here,
+                          sidebarL1Bg: #color-goes-here,
+                          sidebarL1Fg: #color-goes-here,
+                          sidebarL2Bg: #color-goes-here,
+                          sidebarL2Fg: #color-goes-here,
+                          sidebarL2SelectedBg: #color-goes-here,
+                          sidebarL2SelectedFg: #color-goes-here,
+                          sidebarCreateBg: #color-goes-here,
+                          avatarBg: #color-goes-here
+                  )
+  );
+}
