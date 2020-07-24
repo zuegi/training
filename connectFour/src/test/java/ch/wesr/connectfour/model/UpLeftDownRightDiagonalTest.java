@@ -15,7 +15,7 @@ class UpLeftDownRightDiagonalTest extends AbstractDiagonalTest {
         gameTable.setDisc(disc);
         UpLeftDownRightDiagonal upLeftDownRightDiagonal = new UpLeftDownRightDiagonal(gameTable, disc);
         List<Disc> diagonal = upLeftDownRightDiagonal.getDiagonal();
-        printGameTable(gameTable, diagonal);
+        printDiagonal(gameTable, diagonal);
 
         assertEquals(4, diagonal.size());
         assertTrue(diagonal.contains(disc));
@@ -28,7 +28,7 @@ class UpLeftDownRightDiagonalTest extends AbstractDiagonalTest {
         gameTable.setDisc(disc);
         UpLeftDownRightDiagonal upLeftDownRightDiagonal = new UpLeftDownRightDiagonal(gameTable, disc);
         List<Disc> diagonal = upLeftDownRightDiagonal.getDiagonal();
-        printGameTable(gameTable, diagonal);
+        printDiagonal(gameTable, diagonal);
 
         assertEquals(4, diagonal.size());
         assertTrue(diagonal.contains(disc));
@@ -41,7 +41,7 @@ class UpLeftDownRightDiagonalTest extends AbstractDiagonalTest {
         gameTable.setDisc(disc);
         UpLeftDownRightDiagonal upLeftDownRightDiagonal = new UpLeftDownRightDiagonal(gameTable, disc);
         List<Disc> diagonal = upLeftDownRightDiagonal.getDiagonal();
-        printGameTable(gameTable, diagonal);
+        printDiagonal(gameTable, diagonal);
 
         assertEquals(5, diagonal.size());
         assertTrue(diagonal.contains(disc));
@@ -54,7 +54,7 @@ class UpLeftDownRightDiagonalTest extends AbstractDiagonalTest {
         gameTable.setDisc(disc);
         UpLeftDownRightDiagonal upLeftDownRightDiagonal = new UpLeftDownRightDiagonal(gameTable, disc);
         List<Disc> diagonal = upLeftDownRightDiagonal.getDiagonal();
-        printGameTable(gameTable, diagonal);
+        printDiagonal(gameTable, diagonal);
 
         assertEquals(7, diagonal.size());
         assertTrue(diagonal.contains(disc));
@@ -68,7 +68,7 @@ class UpLeftDownRightDiagonalTest extends AbstractDiagonalTest {
         gameTable.setDisc(disc);
         UpLeftDownRightDiagonal upLeftDownRightDiagonal = new UpLeftDownRightDiagonal(gameTable, disc);
         List<Disc> diagonal = upLeftDownRightDiagonal.getDiagonal();
-        printGameTable(gameTable, diagonal);
+        printDiagonal(gameTable, diagonal);
 
         assertEquals(6, diagonal.size());
         assertTrue(diagonal.contains(disc));
