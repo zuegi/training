@@ -1,7 +1,6 @@
 package ch.wesr.connectfour.model;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.List;
 
 public class GameTable {
@@ -65,45 +64,15 @@ public class GameTable {
 
     }
 
-    public boolean checkUpToLeftAndDownToRight(Disc disc) {
-        // Zum Fliegen bringen und danach
-        // zu einer Klasse machen, welche von recht nach links und von links nach rechts kann
+    public boolean checkDiagonal(Disc disc) {
+        UpLeftDownRightDiagonal upLeftDownRightDiagonal = new UpLeftDownRightDiagonal(this, disc);
+        DownLeftUpRightDiagonal downLeftUpRightDiagonal = new DownLeftUpRightDiagonal(this, disc);
 
-        List<Disc> leftDownRight = getTopLeftRightDownDiagonal(disc);
-        long count = leftDownRight.stream()
-                .filter(disc1 -> disc1.getDiscType().equals(disc.getDiscType()))
-                .count();
-        return count > 3;
+        return upLeftDownRightDiagonal.checkForDiagonalsFor(4)
+                || downLeftUpRightDiagonal.checkForDiagonalsFor(4);
+
     }
 
-    public List<Disc> getTopLeftRightDownDiagonal(Disc disc) {
-        List<Disc> leftDownRight = new ArrayList<>();
-        int yCoordinate = disc.getYCoordinate();
-        int xCoordinate = disc.getXCoordinate();
-
-        // finde heraus in welchen beiden Diagonalen die disc Koordinaten liegen
-        // left y+3 bis y-3 und  x-3 - x+3
-        int startY = Math.min(yCoordinate + 3, maxY);
-        int endY = Math.max(yCoordinate - 3, 0);
-
-        for(int y = startY; y >= endY ;y--) {
-
-            int startX = Math.max(xCoordinate - (startY - yCoordinate),0);
-            int endX = Math.min(xCoordinate + 3,maxX);
-            for (int x = startX; x <= endX; x++) {
-
-                if (y + x == yCoordinate + xCoordinate) {
-                    Disc disc1 = gametable[y][x];
-                        leftDownRight.add(disc1);
-                }
-            }
-        }
-        return leftDownRight;
-    }
-
-    public boolean checkRightUpToLeftDown(Disc disc) {
-        return false;
-    }
 
     public void printGameTable() {
         for (int y = maxY; y >= 0; y--) {
@@ -156,4 +125,5 @@ public class GameTable {
     public int getMaxX() {
         return maxX;
     }
+
 }

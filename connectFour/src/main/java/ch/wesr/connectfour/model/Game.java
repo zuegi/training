@@ -34,8 +34,7 @@ public class Game {
         // aus den x,y
         return gameTable.checkHorizontal(disc) ||
         gameTable.checkVertical(disc) ||
-        gameTable.checkUpToLeftAndDownToRight(disc)||
-        gameTable.checkRightUpToLeftDown(disc);
+        gameTable.checkDiagonal(disc);
     }
 
     public void printGameTable() {
