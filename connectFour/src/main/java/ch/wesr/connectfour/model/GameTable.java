@@ -35,17 +35,8 @@ public class GameTable {
     }
 
     public boolean checkHorizontal(Disc disc) {
-        // ich will auf der y Achse über die x Werte durchiterieren
-        int discCounter = 0;
-        for (Disc disc1 : gametable[disc.getYCoordinate()]) {
-            if (discCounter == THIS_NUMBER_WINS) {
-                return true;
-            }
-            if (disc1.getDiscType().equals(disc.getDiscType())) {
-                discCounter++;
-            }
-        }
-        return false;
+        HorizontalStraight horizontalStraight = new HorizontalStraight(this, disc);
+        return horizontalStraight.checkConnectedFor(THIS_NUMBER_WINS);
     }
 
     public boolean checkVertical(Disc disc) {
