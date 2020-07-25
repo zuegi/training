@@ -19,9 +19,15 @@ class GameTest {
         playerX.join(playerO);
     }
 
+    @Test
+    public void testPlayerOWonDownLeftUpRightDiagonal() {
+        dropStonesForLeftRightDiagonal();
+        assertTrue(playerO.dropStone(3, 3));
+        playerX.printGameTable();
+    }
 
     @Test
-    public void testPlayer1WonLeftRightDiagonal() {
+    public void testPlayerXWonUpLeftDownRightDiagonal() {
         dropStonesForLeftRightDiagonal();
         assertFalse(playerO.dropStone(3, 2));
         assertTrue(playerX.dropStone(3, 0));
