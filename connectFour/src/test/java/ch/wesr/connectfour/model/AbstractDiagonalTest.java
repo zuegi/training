@@ -2,8 +2,6 @@ package ch.wesr.connectfour.model;
 
 import java.util.List;
 
-import static org.junit.jupiter.api.Assertions.*;
-
 class AbstractDiagonalTest {
 
     protected void printDiagonal(GameTable gameTable, List<Disc> discList) {

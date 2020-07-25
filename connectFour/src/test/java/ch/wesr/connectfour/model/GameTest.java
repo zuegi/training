@@ -13,18 +13,12 @@ class GameTest {
 
     @BeforeEach
     public void initializeGame() {
-        game = new Game(7, 7);
-        playerO = new Player("player 1", DiscType.O, game);
-        playerX = new Player("player 2", DiscType.X, game);
+        playerO = new Player("player 1", DiscType.O);
+        playerO.startGame(7,7);
+        playerX = new Player("player 2", DiscType.X);
+        playerX.join(playerO);
     }
 
-    @Test
-    public void testTest() {
-        System.out.println(game.getGameTable().length); // y
-        System.out.println(game.getGameTable()[0].length); // x
-
-        System.out.println(5/2 +1);
-    }
 
     @Test
     public void testPlayer1WonLeftRightDiagonal() {

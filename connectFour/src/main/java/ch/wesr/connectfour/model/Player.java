@@ -6,10 +6,9 @@ public class Player {
     private DiscType discType;
     private Game game;
 
-    public Player(String name, DiscType discType, Game game) {
+    public Player(String name, DiscType discType) {
         this.name = name;
         this.discType = discType;
-        this.game = game;
     }
 
     public boolean dropStone(int y, int x) {
@@ -20,5 +19,17 @@ public class Player {
 
     public void printGameTable() {
         game.printGameTable();
+    }
+
+    public void startGame(int y, int x) {
+        this.game = new Game(y, x);
+    }
+
+    public void join(Player player) {
+        this.game = player.getGame();
+    }
+
+    private Game getGame() {
+        return this.game;
     }
 }

@@ -15,7 +15,7 @@ class DownLeftUpRightDiagonalTest extends AbstractDiagonalTest{
         gameTable.setDisc(disc);
 
         DownLeftUpRightDiagonal downLeftUpRightDiagonal = new DownLeftUpRightDiagonal(gameTable, disc);
-        List<Disc> diagonal = downLeftUpRightDiagonal.getDiagonal();
+        List<Disc> diagonal = downLeftUpRightDiagonal.getStraight();
         printDiagonal(gameTable, diagonal);
 
         assertEquals(3, diagonal.size());
@@ -29,7 +29,7 @@ class DownLeftUpRightDiagonalTest extends AbstractDiagonalTest{
         gameTable.setDisc(disc);
 
         DownLeftUpRightDiagonal downLeftUpRightDiagonal = new DownLeftUpRightDiagonal(gameTable, disc);
-        List<Disc> diagonal = downLeftUpRightDiagonal.getDiagonal();
+        List<Disc> diagonal = downLeftUpRightDiagonal.getStraight();
         printDiagonal(gameTable, diagonal);
 
         assertEquals(2, diagonal.size());
@@ -42,7 +42,7 @@ class DownLeftUpRightDiagonalTest extends AbstractDiagonalTest{
         Disc disc = new Disc(1, 3, DiscType.X);
         gameTable.setDisc(disc);
         DownLeftUpRightDiagonal downLeftUpRightDiagonal = new DownLeftUpRightDiagonal(gameTable, disc);
-        List<Disc> diagonal = downLeftUpRightDiagonal.getDiagonal();
+        List<Disc> diagonal = downLeftUpRightDiagonal.getStraight();
         printDiagonal(gameTable, diagonal);
         // max 7 Discs aus der Diagonale, weil gametable 7,7 ist.
         assertEquals(5, diagonal.size());
@@ -56,7 +56,7 @@ class DownLeftUpRightDiagonalTest extends AbstractDiagonalTest{
         Disc disc = new Disc(3, 3, DiscType.X);
         gameTable.setDisc(disc);
         DownLeftUpRightDiagonal downLeftUpRightDiagonal = new DownLeftUpRightDiagonal(gameTable, disc);
-        List<Disc> diagonal = downLeftUpRightDiagonal.getDiagonal();
+        List<Disc> diagonal = downLeftUpRightDiagonal.getStraight();
         printDiagonal(gameTable, diagonal);
         // max 7 Discs aus der Diagonale, weil gametable 7,7 ist.
         assertEquals(7, diagonal.size());
@@ -70,7 +70,7 @@ class DownLeftUpRightDiagonalTest extends AbstractDiagonalTest{
         Disc disc = new Disc(4, 3, DiscType.X);
         gameTable.setDisc(disc);
         DownLeftUpRightDiagonal downLeftUpRightDiagonal = new DownLeftUpRightDiagonal(gameTable, disc);
-        List<Disc> diagonal = downLeftUpRightDiagonal.getDiagonal();
+        List<Disc> diagonal = downLeftUpRightDiagonal.getStraight();
         printDiagonal(gameTable, diagonal);
         assertEquals(6, diagonal.size());
         assertTrue(diagonal.contains(disc));

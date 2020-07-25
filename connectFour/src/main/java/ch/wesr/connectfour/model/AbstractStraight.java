@@ -3,26 +3,26 @@ package ch.wesr.connectfour.model;
 import java.util.ArrayList;
 import java.util.List;
 
-public abstract class AbstractDiagonal {
+public abstract class AbstractStraight {
 
     protected GameTable gameTable;
     protected Disc disc;
-    protected  List<Disc> diagonal = new ArrayList<>();
+    protected  List<Disc> straight = new ArrayList<>();
 
-    public AbstractDiagonal(GameTable gameTable, Disc disc) {
+    public AbstractStraight(GameTable gameTable, Disc disc) {
         this.gameTable = gameTable;
         this.disc = disc;
     }
 
-    public boolean checkForDiagonalsFor(int numberOfDiscsPerDiskType) {
-        long count = diagonal.stream()
+    public boolean checkConnectedFor(int numberOfDiscsPerDiskType) {
+        long count = straight.stream()
                 .filter(disc1 -> disc1.getDiscType().equals(disc.getDiscType()))
                 .count();
         return count == numberOfDiscsPerDiskType;
     }
 
-    public List<Disc> getDiagonal() {
-        return diagonal;
+    public List<Disc> getStraight() {
+        return straight;
     }
 
 }

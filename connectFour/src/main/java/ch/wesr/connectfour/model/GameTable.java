@@ -1,7 +1,6 @@
 package ch.wesr.connectfour.model;
 
-import java.util.ArrayList;
-import java.util.List;
+import static ch.wesr.connectfour.model.GameConstant.*;
 
 public class GameTable {
 
@@ -39,7 +38,7 @@ public class GameTable {
         // ich will auf der y Achse über die x Werte durchiterieren
         int discCounter = 0;
         for (Disc disc1 : gametable[disc.getYCoordinate()]) {
-            if (discCounter == 4) {
+            if (discCounter == THIS_NUMBER_WINS) {
                 return true;
             }
             if (disc1.getDiscType().equals(disc.getDiscType())) {
@@ -50,26 +49,16 @@ public class GameTable {
     }
 
     public boolean checkVertical(Disc disc) {
-
-        int discCounter = 0;
-        for (Disc[] discs : gametable) {
-            if (discCounter == 4) {
-                return true;
-            }
-            if (discs[disc.getXCoordinate()].getDiscType().equals(disc.getDiscType())) {
-                discCounter++;
-            }
-        }
-        return false;
-
+        VerticalStraight verticalStraight = new VerticalStraight(this, disc);
+        return verticalStraight.checkConnectedFor(THIS_NUMBER_WINS);
     }
 
     public boolean checkDiagonal(Disc disc) {
         UpLeftDownRightDiagonal upLeftDownRightDiagonal = new UpLeftDownRightDiagonal(this, disc);
         DownLeftUpRightDiagonal downLeftUpRightDiagonal = new DownLeftUpRightDiagonal(this, disc);
 
-        return upLeftDownRightDiagonal.checkForDiagonalsFor(4)
-                || downLeftUpRightDiagonal.checkForDiagonalsFor(4);
+        return upLeftDownRightDiagonal.checkConnectedFor(THIS_NUMBER_WINS)
+                || downLeftUpRightDiagonal.checkConnectedFor(THIS_NUMBER_WINS);
 
     }
 
