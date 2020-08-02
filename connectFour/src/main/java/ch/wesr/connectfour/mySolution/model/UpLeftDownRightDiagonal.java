@@ -1,6 +1,6 @@
-package ch.wesr.connectfour.model;
+package ch.wesr.connectfour.mySolution.model;
 
-import static ch.wesr.connectfour.model.GameConstant.*;
+import static ch.wesr.connectfour.mySolution.model.GameConstant.*;
 
 public class UpLeftDownRightDiagonal extends AbstractStraight {
 

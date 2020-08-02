@@ -1,4 +1,4 @@
-package ch.wesr.connectfour.model;
+package ch.wesr.connectfour.mySolution.model;
 
 import lombok.Data;
 

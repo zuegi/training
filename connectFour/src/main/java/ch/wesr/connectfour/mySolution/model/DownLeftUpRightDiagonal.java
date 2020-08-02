@@ -1,6 +1,6 @@
-package ch.wesr.connectfour.model;
+package ch.wesr.connectfour.mySolution.model;
 
-import static ch.wesr.connectfour.model.GameConstant.MAX_FIELDS_TO_CHECK;
+import static ch.wesr.connectfour.mySolution.model.GameConstant.MAX_FIELDS_TO_CHECK;
 
 public class DownLeftUpRightDiagonal extends AbstractStraight {
 

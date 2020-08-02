@@ -1,9 +1,7 @@
-package ch.wesr.connectfour;
+package ch.wesr.connectfour.mySolution;
 
-import ch.wesr.connectfour.model.Disc;
-import ch.wesr.connectfour.model.DiscType;
-import ch.wesr.connectfour.model.Game;
-import ch.wesr.connectfour.model.Player;
+import ch.wesr.connectfour.mySolution.model.DiscType;
+import ch.wesr.connectfour.mySolution.model.Player;
 
 import java.io.BufferedReader;
 import java.io.IOException;

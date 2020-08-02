@@ -1,6 +1,4 @@
-package ch.wesr.connectfour.model;
-
-import static ch.wesr.connectfour.model.GameConstant.THIS_NUMBER_WINS;
+package ch.wesr.connectfour.mySolution.model;
 
 public class HorizontalStraight extends AbstractStraight{
 
