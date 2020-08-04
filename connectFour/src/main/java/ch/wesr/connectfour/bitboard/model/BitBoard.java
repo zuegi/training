@@ -2,7 +2,6 @@ package ch.wesr.connectfour.bitboard.model;
 
 import java.util.*;
 import java.util.stream.Collectors;
-import java.util.stream.IntStream;
 
 public class BitBoard {
 
@@ -12,8 +11,8 @@ public class BitBoard {
 
     private final int[] height = new int[]{0, 7, 14, 21, 28, 35, 42};
     private int counter = 0;
-    Map<DiscType, Long> bitboardMap = new HashMap<DiscType, Long> (
-            Map.of(DiscType.O,0L, DiscType.X, 0L));
+    Map<DiscType, Long> bitboardMap = new HashMap<DiscType, Long>(
+            Map.of(DiscType.O, 0L, DiscType.X, 0L));
 
     public static BitBoard create() {
         return new BitBoard();
@@ -28,6 +27,8 @@ public class BitBoard {
         return bitboardMap.get(discType);
     }
 
+
+
     public void printBoard() {
         String bitBoardBinaryStringO = this.convert(bitboardMap.get(DiscType.O));
         String[] arrayOfColumnsO = bitBoardBinaryStringO.split(SEPARATOR);
@@ -35,20 +36,20 @@ public class BitBoard {
         String bitBoardBinaryStringX = this.convert(bitboardMap.get(DiscType.X));
         String[] arrayOfColumnsX = bitBoardBinaryStringX.split(SEPARATOR);
 
-        for (int height = BOARD_HEIGHT-1; height >= 0; height--) {
+        for (int height = BOARD_HEIGHT - 1; height >= 0; height--) {
             // left side numbering
-            System.out.print(height +"  ");
+            System.out.print(height + "  ");
 
-            for (int width = BOARD_WIDTH-1; width >= 0; width--) {
+            for (int width = BOARD_WIDTH - 1; width >= 0; width--) {
                 String[] splittedO = arrayOfColumnsO[width].split("");
                 String[] splittedX = arrayOfColumnsX[width].split("");
 
-                if (splittedO[BOARD_HEIGHT-height].equals(splittedX[BOARD_HEIGHT-height])) {
+                if (splittedO[BOARD_HEIGHT - height].equals(splittedX[BOARD_HEIGHT - height])) {
                     System.out.print(". ");
-                } else if (splittedO[BOARD_HEIGHT-height].equals("1") && splittedX[height].equals("0")) {
-                    System.out.print(DiscType.O +" ");
-                } else if (splittedX[BOARD_HEIGHT-height].equals("1") && splittedO[height].equals("0")) {
-                    System.out.print(DiscType.X +" ");
+                } else if (splittedO[BOARD_HEIGHT - height].equals("1") && splittedX[height].equals("0")) {
+                    System.out.print(DiscType.O + " ");
+                } else if (splittedX[BOARD_HEIGHT - height].equals("1") && splittedO[height].equals("0")) {
+                    System.out.print(DiscType.X + " ");
                 }
             }
             System.out.println("");
@@ -56,8 +57,9 @@ public class BitBoard {
         // footer numbering
         System.out.print("  ");
         for (int width = 0; width < BOARD_WIDTH; width++) {
-            System.out.print(" " +width);
+            System.out.print(" " + width);
         }
+        System.out.println("");
     }
 
 
@@ -82,4 +84,7 @@ public class BitBoard {
         return counter;
     }
 
+    public long getMostRecentlyMove(DiscType discType) {
+        return bitboardMap.get(discType);
+    }
 }

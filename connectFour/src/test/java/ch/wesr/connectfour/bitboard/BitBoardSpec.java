@@ -2,6 +2,7 @@ package ch.wesr.connectfour.bitboard;
 
 import ch.wesr.connectfour.bitboard.model.BitBoard;
 import ch.wesr.connectfour.bitboard.model.DiscType;
+import ch.wesr.connectfour.bitboard.model.GameOverException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
