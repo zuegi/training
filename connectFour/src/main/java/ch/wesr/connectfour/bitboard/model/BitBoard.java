@@ -28,6 +28,15 @@ public class BitBoard {
     }
 
 
+    public List<Integer> listColumnsOfPossibleMoves() {
+        List<Integer> moves = new ArrayList<>();
+        long TOP = 0b1000000_1000000_1000000_1000000_1000000_1000000_1000000L;
+        for(int col = 0; col <= 6; col++) {
+            if ((TOP & (1L << height[col])) == 0) moves.add(col);
+        }
+        return moves;
+    }
+
 
     public void printBoard() {
         String bitBoardBinaryStringO = this.convert(bitboardMap.get(DiscType.O));

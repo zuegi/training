@@ -12,9 +12,38 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class PlayerSpec {
 
-    // player X gewinnt das game diagonal up left to down right
 
-    // player O gewinnt das game diagonal down left to up right
+    @Test
+    void testInvalidMove() {
+        Player playerO = new Player(DiscType.O, "Zuegi");
+        Game game = playerO.startGame();
+        game.printMoves(true);
+        Player playerX = new Player(DiscType.X, "Groot");
+        playerX.joinGame(game);
+        // given
+        // . . . X . . .
+        // . . . O . . .
+        // . . . X . . .
+        // . . . O . . .
+        // . . . X . . .
+        // . . O X O . .
+        // 0 1 2 3 4 5 6
+        playerO.makeMove(2);
+        playerX.makeMove(3);
+        playerO.makeMove(4);
+        playerX.makeMove(3);
+        playerO.makeMove(3);
+        playerX.makeMove(3);
+        playerO.makeMove(3);
+        playerX.makeMove(3);
+        game.printGame();
+
+        // then
+        assertThrows(OutsideOfGameBoard.class, () -> {
+            playerO.makeMove(3);
+        });
+
+    }
 
     @DisplayName("player O (Zuegi) wins the game vertical")
     @Test

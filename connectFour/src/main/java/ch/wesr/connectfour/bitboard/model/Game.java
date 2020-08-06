@@ -1,5 +1,8 @@
 package ch.wesr.connectfour.bitboard.model;
 
+import ch.wesr.connectfour.bitboard.OutsideOfGameBoard;
+import lombok.SneakyThrows;
+
 public class Game {
 
     private final BitBoard bitBoard;
@@ -11,11 +14,19 @@ public class Game {
         this.bitBoard = new BitBoard();
     }
 
-    public long makeMove(DiscType discType, int column)  {
-
+    @SneakyThrows
+    public long makeMove(DiscType discType, int column) {
+        if (!isPossibleMove(column)) {
+            throw new OutsideOfGameBoard(this.currentPlayer.getName() + " plays outside of the board");
+        }
         long bitboard = bitBoard.makeMove(discType, column);
         checkWinner(bitboard);
         return bitboard;
+    }
+
+    private boolean isPossibleMove(int column) {
+        long count = bitBoard.listColumnsOfPossibleMoves().stream().filter(integer -> integer.equals(column)).count();
+        return count > 0;
     }
 
     public void printGame() {
@@ -44,29 +55,24 @@ public class Game {
         return currentPlayer;
     }
 
-    private void checkWinner(long bitboard) throws GameOverException {
-
-        long diagonalTopLeft = bitboard & (bitboard >> 6) & (bitboard >> 12) & (bitboard >> 18);
-        long diagonalDownLeft = bitboard & (bitboard >> 8) & (bitboard >> 16) & (bitboard >> 24);
-        long horizontal = bitboard & (bitboard >> 7) & (bitboard >> 14) & (bitboard >> 21);
-        long vertical = bitboard & (bitboard >> 1) & (bitboard >>  2) & (bitboard >>  3);
-
+    private void checkWinner(long bitboard) {
         if (printMoves) {
             this.printGame();
         }
 
+        long diagonalTopLeft = bitboard & (bitboard >> 6) & (bitboard >> 12) & (bitboard >> 18);
+        long diagonalDownLeft = bitboard & (bitboard >> 8) & (bitboard >> 16) & (bitboard >> 24);
+        long horizontal = bitboard & (bitboard >> 7) & (bitboard >> 14) & (bitboard >> 21);
+        long vertical = bitboard & (bitboard >> 1) & (bitboard >> 2) & (bitboard >> 3);
+
         if (diagonalTopLeft != 0) {
-            System.out.println("Player "+currentPlayer.getName() +" won diagonal top left to down right");
-            throw new GameOverException("diagonal top left bottom right");
+            throw new GameOverException("Player " + currentPlayer.getName() + " won diagonal top left to down right");
         } else if (diagonalDownLeft != 0) {
-            System.out.println("Player "+currentPlayer.getName() +" won diagonal down left to top right");
-            throw new GameOverException("diagonal bottom left top right");
+            throw new GameOverException("Player " + currentPlayer.getName() + " won diagonal down left to top right");
         } else if (horizontal != 0) {
-            System.out.println("Player "+currentPlayer.getName() +" won horizontal");
-            throw new GameOverException("horizontal");
+            throw new GameOverException("Player " + currentPlayer.getName() + " won horizontal");
         } else if (vertical != 0) {
-            System.out.println("Player "+currentPlayer.getName() +" won vertical");
-            throw new GameOverException("vertical");
+            throw new GameOverException("Player " + currentPlayer.getName() + " won vertical");
         }
     }
 

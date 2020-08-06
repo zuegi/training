@@ -2,12 +2,17 @@ package ch.wesr.connectfour.bitboard;
 
 import ch.wesr.connectfour.bitboard.model.BitBoard;
 import ch.wesr.connectfour.bitboard.model.DiscType;
-import ch.wesr.connectfour.bitboard.model.GameOverException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashSet;
+import java.util.Set;
+
 import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @DisplayName("BitBoard Tests")
 public class BitBoardSpec {
@@ -18,6 +23,46 @@ public class BitBoardSpec {
     @BeforeEach
     void init() {
         bitBoard = BitBoard.create();
+    }
+
+    @Test
+    void listPossibleMoves() {
+        // given
+        // . . . X . . .
+        // . . . O . . .
+        // . . . X . . .
+        // . . . O . . .
+        // . . . X . . .
+        // . . O X O . .
+        // 0 1 2 3 4 5 6
+        makeMove(DiscType.O ,2, 1);
+        makeMove(DiscType.X,3, 2);
+        makeMove(DiscType.O,4, 3);
+        makeMove(DiscType.X, 3, 4);
+        makeMove(DiscType.O,3, 5);
+        makeMove(DiscType.X,3, 6);
+        makeMove(DiscType.O, 3, 7);
+        makeMove(DiscType.X, 3, 8);
+
+        // when
+        bitBoard.printBoard();
+        bitBoard.listColumnsOfPossibleMoves().stream().forEach(System.out::println);
+
+        /*
+        For each entry of stream we try to remove it from set.
+        In case the result of Set::remove is true (hence it was contained by set) and the set is empty after removal,
+        we can conclude that stream contained all the elements of initial collection.
+        The terminal operation Stream::anyMatch is a short-circuiting one.
+        So it will stop iterating over stream once the set is empty.
+         */
+        Collection<Integer> collection = Arrays.asList(0,1,2,4,5,6);
+        Set<Integer> set = new HashSet<>(collection);
+        boolean containsAll = set.isEmpty() || bitBoard.listColumnsOfPossibleMoves().stream()
+                .anyMatch(s -> set.remove(s) && set.isEmpty());
+
+        assertTrue(containsAll);
+
+
     }
 
     @DisplayName("Make alternating (O/X) moves for exactly one constellation")
