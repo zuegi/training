@@ -1,10 +1,7 @@
 package ch.wesr.connectfour.bitboard;
 
 
-import ch.wesr.connectfour.bitboard.model.DiscType;
-import ch.wesr.connectfour.bitboard.model.Game;
-import ch.wesr.connectfour.bitboard.model.GameOverException;
-import ch.wesr.connectfour.bitboard.model.Player;
+import ch.wesr.connectfour.bitboard.model.*;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -24,9 +21,11 @@ public class PlayerSpec {
         playerO.makeMove(3);
         playerX.makeMove(2);
         playerO.makeMove(2);
-        // when
-        playerX.undoMove(2);
-        // then
+        // when then
+        assertThrows(IllegalUndoMoveException.class, () -> {
+            playerX.undoMove(2);
+        });
+
     }
 
     @Test

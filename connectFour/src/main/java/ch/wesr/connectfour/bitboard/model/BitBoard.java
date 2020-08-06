@@ -1,5 +1,7 @@
 package ch.wesr.connectfour.bitboard.model;
 
+import lombok.SneakyThrows;
+
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -14,15 +16,14 @@ public class BitBoard {
     Map<DiscType, Long> bitboardMap = new HashMap<DiscType, Long>(
             Map.of(DiscType.O, 0L, DiscType.X, 0L));
 
-    Map<Integer, Integer> moves = new HashMap();
+    Map<Integer, Move> moves = new HashMap();
 
     public static BitBoard create() {
         return new BitBoard();
     }
 
     public long makeMove(DiscType discType, int column) {
-        // history of the moves - used in undo
-        moves.put(counter++, column);
+        moves.put(counter++, new Move(discType, column));
         long move = 1L << height[column]++;
         long aLong = bitboardMap.get(discType);
         aLong ^= move;
@@ -30,12 +31,16 @@ public class BitBoard {
         return bitboardMap.get(discType);
     }
 
+    @SneakyThrows
     public long undoMove(DiscType discType, int column) {
-        // TODO discType is not considered
-        int col = moves.get(--counter);
-        long move = 1L << --height[col];
+        Move move = moves.get(--counter);
+        if (!move.getDiscType().equals(discType)) {
+            throw new IllegalUndoMoveException("halleljua");
+        }
+        int col = move.getColumn();
+        long moveLong = 1L << --height[col];
         long aLong = bitboardMap.get(discType);
-        aLong ^= move;
+        aLong ^= moveLong;
         bitboardMap.put(discType, aLong);
         return bitboardMap.get(discType);
     }

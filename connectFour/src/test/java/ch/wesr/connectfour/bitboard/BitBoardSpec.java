@@ -2,6 +2,7 @@ package ch.wesr.connectfour.bitboard;
 
 import ch.wesr.connectfour.bitboard.model.BitBoard;
 import ch.wesr.connectfour.bitboard.model.DiscType;
+import ch.wesr.connectfour.bitboard.model.IllegalUndoMoveException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -11,8 +12,7 @@ import java.util.Collection;
 import java.util.HashSet;
 import java.util.Set;
 
-import static org.junit.jupiter.api.Assertions.assertEquals;
-import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.junit.jupiter.api.Assertions.*;
 
 @DisplayName("BitBoard Tests")
 public class BitBoardSpec {
@@ -32,7 +32,9 @@ public class BitBoardSpec {
         bitBoard.makeMove(DiscType.X, 2);
         bitBoard.makeMove(DiscType.O, 3);
         // TODO should be an error
-        bitBoard.undoMove(DiscType.X, 2);
+        assertThrows(IllegalUndoMoveException.class, () -> {
+            bitBoard.undoMove(DiscType.X, 2);
+        });
     }
 
     @Test
