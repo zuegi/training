@@ -14,14 +14,27 @@ public class BitBoard {
     Map<DiscType, Long> bitboardMap = new HashMap<DiscType, Long>(
             Map.of(DiscType.O, 0L, DiscType.X, 0L));
 
+    Map<Integer, Integer> moves = new HashMap();
+
     public static BitBoard create() {
         return new BitBoard();
     }
 
     public long makeMove(DiscType discType, int column) {
-        counter++;
+        // history of the moves - used in undo
+        moves.put(counter++, column);
         long move = 1L << height[column]++;
-        long aLong = bitboardMap.get(discType).longValue();
+        long aLong = bitboardMap.get(discType);
+        aLong ^= move;
+        bitboardMap.put(discType, aLong);
+        return bitboardMap.get(discType);
+    }
+
+    public long undoMove(DiscType discType, int column) {
+        // TODO discType is not considered
+        int col = moves.get(--counter);
+        long move = 1L << --height[col];
+        long aLong = bitboardMap.get(discType);
         aLong ^= move;
         bitboardMap.put(discType, aLong);
         return bitboardMap.get(discType);

@@ -24,6 +24,15 @@ public class Game {
         return bitboard;
     }
 
+    @SneakyThrows
+    public long undoMove(DiscType discType, int column) {
+        if (!isPossibleMove(column)) {
+            throw new OutsideOfGameBoard(this.currentPlayer.getName() + " plays outside of the board");
+        }
+        long bitboard = bitBoard.undoMove(discType, column);
+        return bitboard;
+    }
+
     private boolean isPossibleMove(int column) {
         long count = bitBoard.listColumnsOfPossibleMoves().stream().filter(integer -> integer.equals(column)).count();
         return count > 0;
@@ -79,4 +88,6 @@ public class Game {
     public long getMostRecentlyMove(DiscType discType) {
         return bitBoard.getMostRecentlyMove(discType);
     }
+
+
 }

@@ -40,6 +40,10 @@ public class Player {
         return move;
     }
 
+    public long undoMove(int column) {
+        return this.game.undoMove(this.discType, column);
+    }
+
     public void printGame() {
         game.printGame();
     }

@@ -12,14 +12,57 @@ import static org.junit.jupiter.api.Assertions.*;
 
 public class PlayerSpec {
 
+    Player playerO;
+    Player playerX;
+    Game game;
+
+
+    @Test
+    void illegalUndoMove() {
+        // given
+        initalizeValidGame();
+        playerO.makeMove(3);
+        playerX.makeMove(2);
+        playerO.makeMove(2);
+        // when
+        playerX.undoMove(2);
+        // then
+    }
+
+    @Test
+    void makeUndoMove() {
+        // given
+        initalizeValidGame();
+        game.printMoves(true);
+        game.printGame();
+
+        long mostRecentlyMove = playerO.getMostRecentlyMove();
+        // when
+        playerO.makeMove(0);
+
+        // then
+        assertEquals(mostRecentlyMove, playerO.undoMove(0), () -> "move should be " + mostRecentlyMove);
+    }
+
+    @Test
+    void invalidMoveMinusColumn() {
+        initalizeValidGame();
+        assertThrows(OutsideOfGameBoard.class, () -> {
+            playerO.makeMove(-1);
+        });
+    }
+
+    @Test
+    void columnOutsideBoard() {
+        initalizeValidGame();
+        assertThrows(OutsideOfGameBoard.class, () -> {
+            playerO.makeMove(8);
+        });
+    }
 
     @Test
     void testInvalidMove() {
-        Player playerO = new Player(DiscType.O, "Zuegi");
-        Game game = playerO.startGame();
-        game.printMoves(true);
-        Player playerX = new Player(DiscType.X, "Groot");
-        playerX.joinGame(game);
+        initalizeValidGame();
         // given
         // . . . X . . .
         // . . . O . . .
@@ -45,14 +88,19 @@ public class PlayerSpec {
 
     }
 
+    private void initalizeValidGame() {
+        playerO = new Player(DiscType.O, "Zuegi");
+        game = playerO.startGame();
+        game.printMoves(true);
+        playerX = new Player(DiscType.X, "Groot");
+        playerX.joinGame(game);
+    }
+
     @DisplayName("player O (Zuegi) wins the game vertical")
     @Test
     void playerOwinsTheGameVertical() {
         // given
-        Player playerO = new Player(DiscType.O, "Zuegi");
-        Game game = playerO.startGame();
-        Player playerX = new Player(DiscType.X, "Groot");
-        playerX.joinGame(game);
+       initalizeValidGame();
         // when
         playerO.makeMove(0);
         playerX.makeMove(1);
@@ -70,10 +118,7 @@ public class PlayerSpec {
     @Test
     void playerXwinsTheGameHorizontal() {
         // given
-        Player playerO = new Player(DiscType.O, "Zuegi");
-        Game game = playerO.startGame();
-        Player playerX = new Player(DiscType.X, "Groot");
-        playerX.joinGame(game);
+       initalizeValidGame();
         // when
         playerO.makeMove(0);
         playerX.makeMove(1);
@@ -94,10 +139,7 @@ public class PlayerSpec {
     @Test
     void playerXWantsToMake2Moves() {
         // given
-        Player playerO = new Player(DiscType.O, "Zuegi");
-        Game game = playerO.startGame();
-        Player playerX = new Player(DiscType.X, "Groot");
-        playerX.joinGame(game);
+       initalizeValidGame();
         // when
         playerX.makeMove(0);
         assertThrows(IllegalArgumentException.class, () -> {
@@ -138,13 +180,9 @@ public class PlayerSpec {
     void playerOinitalizesPlayerXOpensTheGame() {
         // given
         long expectedBitboardLong = 16384L;
-        Player playerO = new Player(DiscType.O, "Zuegi");
-        Game game = playerO.startGame();
-        game.printMoves(false);
-        Player playerX = new Player(DiscType.X, "Groot");
+        initalizeValidGame();
 
         // when
-        playerX.joinGame(game);
         playerX.makeMove(2);
 
         // then

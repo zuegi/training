@@ -25,6 +25,26 @@ public class BitBoardSpec {
         bitBoard = BitBoard.create();
     }
 
+
+    @Test
+    void makeInvalidUndoMove() {
+        long mostRecentlyMove = bitBoard.getMostRecentlyMove(DiscType.X);
+        bitBoard.makeMove(DiscType.X, 2);
+        bitBoard.makeMove(DiscType.O, 3);
+        // TODO should be an error
+        bitBoard.undoMove(DiscType.X, 2);
+    }
+
+    @Test
+    void makeValidUndoMove() {
+        // given
+        long mostRecentlyMove = bitBoard.getMostRecentlyMove(DiscType.X);
+        bitBoard.makeMove(DiscType.X, 2);
+
+        // when undoMove then
+        assertEquals(mostRecentlyMove, bitBoard.undoMove(DiscType.X, 2), () -> "move should be " + mostRecentlyMove);
+    }
+
     @Test
     void listPossibleMoves() {
         // given
