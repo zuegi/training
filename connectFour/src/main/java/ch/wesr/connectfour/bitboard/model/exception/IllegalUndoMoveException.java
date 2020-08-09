@@ -1,4 +1,4 @@
-package ch.wesr.connectfour.bitboard.model;
+package ch.wesr.connectfour.bitboard.model.exception;
 
 public class IllegalUndoMoveException extends Throwable {
 

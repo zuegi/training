@@ -2,6 +2,9 @@ package ch.wesr.connectfour.bitboard;
 
 
 import ch.wesr.connectfour.bitboard.model.*;
+import ch.wesr.connectfour.bitboard.model.exception.GameOverException;
+import ch.wesr.connectfour.bitboard.model.exception.IllegalUndoMoveException;
+import ch.wesr.connectfour.bitboard.model.exception.OutsideOfGameBoardException;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -13,6 +16,22 @@ public class PlayerSpec {
     Player playerX;
     Game game;
 
+
+    @Test
+    void playAgainstFirstBot() {
+       initalizeValidGame();
+        // playerX starts the game
+        playerO.makeMove(3);
+        // then bot player should make move on its own
+        playerX.findBestMove();
+
+        playerO.makeMove(3);
+        playerX.findBestMove();
+        playerO.makeMove(3);
+        playerX.findBestMove();
+        playerO.makeMove(2);
+        playerX.findBestMove();
+    }
 
     @Test
     void illegalUndoMove() {
@@ -46,7 +65,7 @@ public class PlayerSpec {
     @Test
     void invalidMoveMinusColumn() {
         initalizeValidGame();
-        assertThrows(OutsideOfGameBoard.class, () -> {
+        assertThrows(OutsideOfGameBoardException.class, () -> {
             playerO.makeMove(-1);
         });
     }
@@ -54,7 +73,7 @@ public class PlayerSpec {
     @Test
     void columnOutsideBoard() {
         initalizeValidGame();
-        assertThrows(OutsideOfGameBoard.class, () -> {
+        assertThrows(OutsideOfGameBoardException.class, () -> {
             playerO.makeMove(8);
         });
     }
@@ -81,7 +100,7 @@ public class PlayerSpec {
         game.printGame();
 
         // then
-        assertThrows(OutsideOfGameBoard.class, () -> {
+        assertThrows(OutsideOfGameBoardException.class, () -> {
             playerO.makeMove(3);
         });
 

@@ -5,6 +5,7 @@ public class Player {
     private DiscType discType;
     private String name;
     private Game game;
+    private boolean maximizer;
 
     public Player(DiscType discType, String name) {
         this.discType = discType;
@@ -15,6 +16,7 @@ public class Player {
     public Game startGame() {
         this.game = new Game();
         this.game.setFirstPlayer(this);
+        this.maximizer = true;
         return this.game;
     }
 
@@ -27,7 +29,6 @@ public class Player {
         }
 
         this.game = gameToBeJoined;
-        this.game.printGame();
     }
 
     public long makeMove(int column)  {
@@ -44,9 +45,11 @@ public class Player {
         return this.game.undoMove(this.discType, column);
     }
 
-    public void printGame() {
-        game.printGame();
+    public long findBestMove() {
+        int bestMove = this.game.findBestMove(/*this.discType,*/ this.maximizer);
+        return this.game.makeMove(discType, bestMove);
     }
+
 
     public DiscType getDiscType() {
         return discType;
@@ -67,4 +70,5 @@ public class Player {
     public long getMostRecentlyMove() {
         return this.game.getMostRecentlyMove(this.discType);
     }
+
 }

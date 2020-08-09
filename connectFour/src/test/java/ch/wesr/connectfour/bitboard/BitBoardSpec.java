@@ -2,7 +2,8 @@ package ch.wesr.connectfour.bitboard;
 
 import ch.wesr.connectfour.bitboard.model.BitBoard;
 import ch.wesr.connectfour.bitboard.model.DiscType;
-import ch.wesr.connectfour.bitboard.model.IllegalUndoMoveException;
+import ch.wesr.connectfour.bitboard.model.PrintGame;
+import ch.wesr.connectfour.bitboard.model.exception.IllegalUndoMoveException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -19,10 +20,12 @@ public class BitBoardSpec {
 
     BitBoard bitBoard;
     DiscType[] discTypes = new DiscType[]{DiscType.O, DiscType.X};
+    PrintGame printGame;
 
     @BeforeEach
     void init() {
         bitBoard = BitBoard.create();
+        printGame = new PrintGame();
     }
 
 
@@ -67,7 +70,7 @@ public class BitBoardSpec {
         makeMove(DiscType.X, 3, 8);
 
         // when
-        bitBoard.printBoard();
+        printGame.printBoard(bitBoard.getBitboardMap());
         bitBoard.listColumnsOfPossibleMoves().stream().forEach(System.out::println);
 
         /*
@@ -108,12 +111,12 @@ public class BitBoardSpec {
         makeMove(DiscType.X, 3, 4);
         long bitBoardLongO = makeMove(DiscType.O,3, 5);
         long bitBoardLongX = makeMove(DiscType.X,4, 6);
-        bitBoard.printBoard();
+        printGame.printBoard(bitBoard.getBitboardMap());
         // then
-        String convertByteStringO = bitBoard.convert(bitBoardLongO);
+        String convertByteStringO = printGame.convert(bitBoardLongO);
         assertEquals(expectedByteStringO, convertByteStringO, () -> "Converted byte String should be " +expectedByteStringO);
 
-        String convertByteStringX = bitBoard.convert(bitBoardLongX);
+        String convertByteStringX = printGame.convert(bitBoardLongX);
         assertEquals(expectedByteStringX, convertByteStringX, () -> "Converted byte String should be " +expectedByteStringX);
     }
 
@@ -127,9 +130,9 @@ public class BitBoardSpec {
         for (int height = 0; height < BitBoard.BOARD_HEIGHT; height++) {
             bitboardLongArray[height] = makeMove(discTypes[height & 1], 0, height +1);
         }
-        assertEquals(finalExpectedBitBoardLong_X, bitBoard.convert(bitboardLongArray[BitBoard.BOARD_HEIGHT-1]), () -> "BinaryString should be " +finalExpectedBitBoardLong_X);
-        assertEquals(finalExpectedBitboardLong_O, bitBoard.convert(bitboardLongArray[BitBoard.BOARD_HEIGHT-2]), () -> "BinaryString should be " +finalExpectedBitboardLong_O);
-        bitBoard.printBoard();
+        assertEquals(finalExpectedBitBoardLong_X, printGame.convert(bitboardLongArray[BitBoard.BOARD_HEIGHT-1]), () -> "BinaryString should be " +finalExpectedBitBoardLong_X);
+        assertEquals(finalExpectedBitboardLong_O, printGame.convert(bitboardLongArray[BitBoard.BOARD_HEIGHT-2]), () -> "BinaryString should be " +finalExpectedBitboardLong_O);
+        printGame.printBoard(bitBoard.getBitboardMap());
     }
 
 
@@ -143,14 +146,14 @@ public class BitBoardSpec {
             bitboardLongArray[width] = makeMove(discTypes[width & 1],width, width +1);
         }
 
-        assertEquals(finalExpectedBitboardLong_O, bitBoard.convert(bitboardLongArray[BitBoard.BOARD_WIDTH-1]), () -> "BinaryString should be " +finalExpectedBitboardLong_O);
-        assertEquals(finalExpectedBitBoardLong_X, bitBoard.convert(bitboardLongArray[BitBoard.BOARD_WIDTH-2]), () -> "BinaryString should be " +finalExpectedBitBoardLong_X);
-        bitBoard.printBoard();
+        assertEquals(finalExpectedBitboardLong_O, printGame.convert(bitboardLongArray[BitBoard.BOARD_WIDTH-1]), () -> "BinaryString should be " +finalExpectedBitboardLong_O);
+        assertEquals(finalExpectedBitBoardLong_X, printGame.convert(bitboardLongArray[BitBoard.BOARD_WIDTH-2]), () -> "BinaryString should be " +finalExpectedBitBoardLong_X);
+        printGame.printBoard(bitBoard.getBitboardMap());
     }
 
     private long makeMove(DiscType discType, int column, int moves) {
         long bitboardLong = bitBoard.makeMove(discType, column);
-        String convertByteString = bitBoard.convert(bitboardLong);
+        String convertByteString = printGame.convert(bitboardLong);
         assertEquals( moves, bitBoard.getCounter(), () -> "Move should be " +moves );
         return bitboardLong;
     }

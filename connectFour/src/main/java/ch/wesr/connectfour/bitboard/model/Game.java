@@ -1,7 +1,10 @@
 package ch.wesr.connectfour.bitboard.model;
 
-import ch.wesr.connectfour.bitboard.OutsideOfGameBoard;
+import ch.wesr.connectfour.bitboard.model.exception.GameOverException;
+import ch.wesr.connectfour.bitboard.model.exception.OutsideOfGameBoardException;
 import lombok.SneakyThrows;
+
+import java.util.List;
 
 public class Game {
 
@@ -9,15 +12,17 @@ public class Game {
     private Player firstPlayer;
     private boolean printMoves;
     private Player currentPlayer;
+    private PrintGame printBoard;
 
     public Game() {
         this.bitBoard = new BitBoard();
+        this.printBoard = new PrintGame();
     }
 
     @SneakyThrows
     public long makeMove(DiscType discType, int column) {
         if (!isPossibleMove(column)) {
-            throw new OutsideOfGameBoard(this.currentPlayer.getName() + " plays outside of the board");
+            throw new OutsideOfGameBoardException(this.currentPlayer.getName() + " plays outside of the board");
         }
         long bitboard = bitBoard.makeMove(discType, column);
         checkWinner(bitboard);
@@ -27,7 +32,7 @@ public class Game {
     @SneakyThrows
     public long undoMove(DiscType discType, int column) {
         if (!isPossibleMove(column)) {
-            throw new OutsideOfGameBoard(this.currentPlayer.getName() + " plays outside of the board");
+            throw new OutsideOfGameBoardException(this.currentPlayer.getName() + " plays outside of the board");
         }
         long bitboard = bitBoard.undoMove(discType, column);
         return bitboard;
@@ -38,9 +43,14 @@ public class Game {
         return count > 0;
     }
 
+    public int[] listColumnsOfPossibleMoves() {
+        List<Integer> integers = bitBoard.listColumnsOfPossibleMoves();
+       return integers.stream().mapToInt(i->i).toArray();
+    }
+
     public void printGame() {
         if (printMoves) {
-            bitBoard.printBoard();
+            printBoard.printBoard(bitBoard.getBitboardMap());
         }
     }
 
@@ -90,4 +100,8 @@ public class Game {
     }
 
 
+    public int findBestMove(/*DiscType discType,*/ boolean maximizer) {
+//        return bitBoard.findBestMove(/*discType,*/ maximizer);
+        return 0;
+    }
 }
