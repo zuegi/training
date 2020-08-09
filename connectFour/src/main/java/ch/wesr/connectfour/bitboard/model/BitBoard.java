@@ -1,13 +1,14 @@
 package ch.wesr.connectfour.bitboard.model;
 
+import ch.wesr.connectfour.bitboard.model.exception.IllegalUndoMoveException;
 import lombok.SneakyThrows;
 
 import java.util.*;
-import java.util.stream.Collectors;
 
 public class BitBoard {
 
-    public static final String SEPARATOR = " ";
+    public static final int MIN = -1000;
+    public static final int MAX = 1000;
     public static int BOARD_WIDTH = 7;
     public static int BOARD_HEIGHT = 6;
 
@@ -45,7 +46,6 @@ public class BitBoard {
         return bitboardMap.get(discType);
     }
 
-
     public List<Integer> listColumnsOfPossibleMoves() {
         List<Integer> moves = new ArrayList<>();
         long TOP = 0b1000000_1000000_1000000_1000000_1000000_1000000_1000000L;
@@ -56,55 +56,31 @@ public class BitBoard {
     }
 
 
-    public void printBoard() {
-        String bitBoardBinaryStringO = this.convert(bitboardMap.get(DiscType.O));
-        String[] arrayOfColumnsO = bitBoardBinaryStringO.split(SEPARATOR);
+    public int findBestMove(int depth, boolean maximizer) {
 
-        String bitBoardBinaryStringX = this.convert(bitboardMap.get(DiscType.X));
-        String[] arrayOfColumnsX = bitBoardBinaryStringX.split(SEPARATOR);
+//        leafNode hat etwas mit depth zu tun - weiss nur noch nicht was
+//        und BOARD_HEIGHT
+//        if(leafNode is reached)
+//            return wasWeissich;
 
-        for (int height = BOARD_HEIGHT - 1; height >= 0; height--) {
-            // left side numbering
-            System.out.print(height + "  ");
-
-            for (int width = BOARD_WIDTH - 1; width >= 0; width--) {
-                String[] splittedO = arrayOfColumnsO[width].split("");
-                String[] splittedX = arrayOfColumnsX[width].split("");
-
-                if (splittedO[BOARD_HEIGHT - height].equals(splittedX[BOARD_HEIGHT - height])) {
-                    System.out.print(". ");
-                } else if (splittedO[BOARD_HEIGHT - height].equals("1") && splittedX[height].equals("0")) {
-                    System.out.print(DiscType.O + " ");
-                } else if (splittedX[BOARD_HEIGHT - height].equals("1") && splittedO[height].equals("0")) {
-                    System.out.print(DiscType.X + " ");
-                }
+        int bestMove;
+        int value = 0;
+        if (maximizer) {
+            bestMove = MIN;
+            for (Integer possibleCurrentMove : this.listColumnsOfPossibleMoves()) {
+                value = findBestMove(depth + 1, false);
+                bestMove = Math.max(bestMove, value);
             }
-            System.out.println("");
-        }
-        // footer numbering
-        System.out.print("  ");
-        for (int width = 0; width < BOARD_WIDTH; width++) {
-            System.out.print(" " + width);
-        }
-        System.out.println("");
-    }
 
-
-    public String convert(long bitRepresention) {
-        String result = Long.toBinaryString(bitRepresention);
-        String resultWithPadding = String.format("%49s", result).replaceAll(" ", "0");
-        return produceBinaryString(resultWithPadding, BOARD_WIDTH, SEPARATOR);
-    }
-
-    private String produceBinaryString(String binary, int blockSize, String separator) {
-        List<String> result = new ArrayList<>();
-        int index = 0;
-        while (index < binary.length()) {
-            result.add(binary.substring(index, Math.min(index + blockSize, binary.length())));
-            index += blockSize;
+        } else {
+            bestMove = MAX;
+            for (Integer possibleCurrentMove : this.listColumnsOfPossibleMoves()) {
+                value = findBestMove(depth + 1, false);
+                bestMove = Math.max(bestMove, value);
+            }
         }
 
-        return result.stream().collect(Collectors.joining(separator));
+        return bestMove;
     }
 
     public int getCounter() {
@@ -114,4 +90,9 @@ public class BitBoard {
     public long getMostRecentlyMove(DiscType discType) {
         return bitboardMap.get(discType);
     }
+
+    public Map<DiscType, Long> getBitboardMap() {
+        return this.bitboardMap;
+    }
+
 }
