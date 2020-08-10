@@ -42,9 +42,7 @@ public class PlayerSpec {
         playerX.makeMove(2);
         playerO.makeMove(2);
         // when then
-        assertThrows(IllegalUndoMoveException.class, () -> {
-            playerX.undoMove(2);
-        });
+        assertThrows(IllegalUndoMoveException.class, () -> playerX.undoMove(2));
 
     }
 
@@ -66,17 +64,13 @@ public class PlayerSpec {
     @Test
     void invalidMoveMinusColumn() {
         initalizeValidGame();
-        assertThrows(OutsideOfGameBoardException.class, () -> {
-            playerO.makeMove(-1);
-        });
+        assertThrows(OutsideOfGameBoardException.class, () -> playerO.makeMove(-1));
     }
 
     @Test
     void columnOutsideBoard() {
         initalizeValidGame();
-        assertThrows(OutsideOfGameBoardException.class, () -> {
-            playerO.makeMove(8);
-        });
+        assertThrows(OutsideOfGameBoardException.class, () -> playerO.makeMove(8));
     }
 
     @Test
@@ -101,9 +95,7 @@ public class PlayerSpec {
         game.printGame();
 
         // then
-        assertThrows(OutsideOfGameBoardException.class, () -> {
-            playerO.makeMove(3);
-        });
+        assertThrows(OutsideOfGameBoardException.class, () -> playerO.makeMove(3));
 
     }
 
@@ -128,9 +120,7 @@ public class PlayerSpec {
         playerO.makeMove(0);
         playerX.makeMove(3);
         // then
-        assertThrows(GameOverException.class, () -> {
-            playerO.makeMove(0);
-        });
+        assertThrows(GameOverException.class, () -> playerO.makeMove(0));
     }
 
     @DisplayName("player X (Groot) wins the game horizontal")
@@ -149,9 +139,7 @@ public class PlayerSpec {
         playerX.makeMove(5);
         playerO.makeMove(2);
         // then
-        assertThrows(GameOverException.class, () -> {
-            playerX.makeMove(6);
-        });
+        assertThrows(GameOverException.class, () -> playerX.makeMove(6));
     }
 
     @DisplayName("player X wants to make 2 moves")
@@ -161,9 +149,7 @@ public class PlayerSpec {
        initalizeValidGame();
         // when
         playerX.makeMove(0);
-        assertThrows(IllegalArgumentException.class, () -> {
-            playerX.makeMove(1);
-        });
+        assertThrows(IllegalArgumentException.class, () -> playerX.makeMove(1));
     }
 
     @DisplayName("player X join a void game")
@@ -173,9 +159,7 @@ public class PlayerSpec {
         Game game = new Game();
         Player playerX = new Player(DiscType.X, "Zuegi");
         // when - then
-        assertThrows(IllegalArgumentException.class, () -> {
-            playerX.joinGame(game);
-        });
+        assertThrows(IllegalArgumentException.class, () -> playerX.joinGame(game));
     }
 
     @DisplayName("2 players X can not join the same game")
@@ -189,9 +173,7 @@ public class PlayerSpec {
         Player anotherPlayerX = new Player(DiscType.X, "Groot");
 
         // then
-        assertThrows(IllegalArgumentException.class, () -> {
-            anotherPlayerX.joinGame(game);
-        });
+        assertThrows(IllegalArgumentException.class, () -> anotherPlayerX.joinGame(game));
     }
 
     @DisplayName("player O initalizes - player X opens the game")

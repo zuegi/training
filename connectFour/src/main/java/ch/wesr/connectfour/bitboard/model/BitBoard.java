@@ -14,7 +14,7 @@ public class BitBoard {
 
     private final int[] height = new int[]{0, 7, 14, 21, 28, 35, 42};
     private int counter = 0;
-    Map<DiscType, Long> bitboardMap = new HashMap<DiscType, Long>(
+    Map<DiscType, Long> bitboardMap = new HashMap<>(
             Map.of(DiscType.O, 0L, DiscType.X, 0L));
 
     Map<Integer, Move> moves = new HashMap();
@@ -33,7 +33,7 @@ public class BitBoard {
     }
 
     @SneakyThrows
-    public long undoMove(DiscType discType, int column) {
+    public long undoMove(DiscType discType) {
         Move move = moves.get(--counter);
         if (!move.getDiscType().equals(discType)) {
             throw new IllegalUndoMoveException("halleljua");
@@ -60,9 +60,9 @@ public class BitBoard {
     // current player (Initially called
     // for root and maximizer)
     public int findBestMove(int depth, int nodeIndex,
-                              Boolean maximizingPlayer,
-                              int values[], int alpha,
-                              int beta) {
+                            Boolean maximizingPlayer,
+                            int[] values, int alpha,
+                            int beta) {
         // Terminating condition. i.e
         // leaf node is reached
         if (depth == 3)

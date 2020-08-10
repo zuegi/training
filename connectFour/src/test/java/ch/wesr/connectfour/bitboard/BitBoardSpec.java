@@ -28,20 +28,17 @@ public class BitBoardSpec {
 
     @Test
     void findBestMove() {
-        int values[] = {3, 5, 6, 9, 1, 2, 0, -1};
+        int[] values = {3, 5, 6, 9, 1, 2, 0, -1};
         int bestMove = bitBoard.findBestMove(0, 0,true, values,BitBoard.MIN, BitBoard.MAX);
         assertEquals(5, bestMove);
     }
 
     @Test
     void makeInvalidUndoMove() {
-        long mostRecentlyMove = bitBoard.getMostRecentlyMove(DiscType.X);
         bitBoard.makeMove(DiscType.X, 2);
         bitBoard.makeMove(DiscType.O, 3);
         // TODO should be an error
-        assertThrows(IllegalUndoMoveException.class, () -> {
-            bitBoard.undoMove(DiscType.X, 2);
-        });
+        assertThrows(IllegalUndoMoveException.class, () -> bitBoard.undoMove(DiscType.X));
     }
 
     @Test
@@ -51,7 +48,7 @@ public class BitBoardSpec {
         bitBoard.makeMove(DiscType.X, 2);
 
         // when undoMove then
-        assertEquals(mostRecentlyMove, bitBoard.undoMove(DiscType.X, 2), () -> "move should be " + mostRecentlyMove);
+        assertEquals(mostRecentlyMove, bitBoard.undoMove(DiscType.X), () -> "move should be " + mostRecentlyMove);
     }
 
     @Test
@@ -146,7 +143,6 @@ public class BitBoardSpec {
 
     private long makeMove(DiscType discType, int column, int moves) {
         long bitboardLong = bitBoard.makeMove(discType, column);
-        String convertByteString = printGame.convert(bitboardLong);
         assertEquals( moves, bitBoard.getCounter(), () -> "Move should be " +moves );
         return bitboardLong;
     }

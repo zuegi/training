@@ -35,7 +35,7 @@ public class Game {
         if (!isPossibleMove(column)) {
             throw new OutsideOfGameBoardException(this.currentPlayer.getName() + " plays outside of the board");
         }
-        long bitboard = bitBoard.undoMove(discType, column);
+        long bitboard = bitBoard.undoMove(discType);
         return bitboard;
     }
 
