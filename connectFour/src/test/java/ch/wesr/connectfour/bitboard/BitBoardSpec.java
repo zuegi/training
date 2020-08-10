@@ -9,9 +9,6 @@ import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
 import java.util.Arrays;
-import java.util.Collection;
-import java.util.HashSet;
-import java.util.Set;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -28,6 +25,13 @@ public class BitBoardSpec {
         printGame = new PrintGame();
     }
 
+
+    @Test
+    void findBestMove() {
+        int values[] = {3, 5, 6, 9, 1, 2, 0, -1};
+        int bestMove = bitBoard.findBestMove(0, 0,true, values,BitBoard.MIN, BitBoard.MAX);
+        assertEquals(5, bestMove);
+    }
 
     @Test
     void makeInvalidUndoMove() {
@@ -53,6 +57,8 @@ public class BitBoardSpec {
     @Test
     void listPossibleMoves() {
         // given
+        int[] expectedArray = new int[]{0, 1, 2, 4, 5, 6};
+        // given gameboard
         // . . . X . . .
         // . . . O . . .
         // . . . X . . .
@@ -71,21 +77,8 @@ public class BitBoardSpec {
 
         // when
         printGame.printBoard(bitBoard.getBitboardMap());
-        bitBoard.listColumnsOfPossibleMoves().stream().forEach(System.out::println);
-
-        /*
-        For each entry of stream we try to remove it from set.
-        In case the result of Set::remove is true (hence it was contained by set) and the set is empty after removal,
-        we can conclude that stream contained all the elements of initial collection.
-        The terminal operation Stream::anyMatch is a short-circuiting one.
-        So it will stop iterating over stream once the set is empty.
-         */
-        Collection<Integer> collection = Arrays.asList(0,1,2,4,5,6);
-        Set<Integer> set = new HashSet<>(collection);
-        boolean containsAll = set.isEmpty() || bitBoard.listColumnsOfPossibleMoves().stream()
-                .anyMatch(s -> set.remove(s) && set.isEmpty());
-
-        assertTrue(containsAll);
+        // then
+        assertTrue(Arrays.equals(expectedArray, bitBoard.listColumnsOfPossibleMoves()));
 
 
     }

@@ -46,41 +46,62 @@ public class BitBoard {
         return bitboardMap.get(discType);
     }
 
-    public List<Integer> listColumnsOfPossibleMoves() {
+    public int[] listColumnsOfPossibleMoves() {
         List<Integer> moves = new ArrayList<>();
         long TOP = 0b1000000_1000000_1000000_1000000_1000000_1000000_1000000L;
         for(int col = 0; col <= 6; col++) {
             if ((TOP & (1L << height[col])) == 0) moves.add(col);
         }
-        return moves;
+        return moves.stream().mapToInt(i->i).toArray();
     }
 
 
-    public int findBestMove(int depth, boolean maximizer) {
+    // Returns optimal value for
+    // current player (Initially called
+    // for root and maximizer)
+    public int findBestMove(int depth, int nodeIndex,
+                              Boolean maximizingPlayer,
+                              int values[], int alpha,
+                              int beta) {
+        // Terminating condition. i.e
+        // leaf node is reached
+        if (depth == 3)
+            return values[nodeIndex];
 
-//        leafNode hat etwas mit depth zu tun - weiss nur noch nicht was
-//        und BOARD_HEIGHT
-//        if(leafNode is reached)
-//            return wasWeissich;
+        if (maximizingPlayer) {
+            int best = MIN;
 
-        int bestMove;
-        int value = 0;
-        if (maximizer) {
-            bestMove = MIN;
-            for (Integer possibleCurrentMove : this.listColumnsOfPossibleMoves()) {
-                value = findBestMove(depth + 1, false);
-                bestMove = Math.max(bestMove, value);
+            // Recur for left and
+            // right children
+            for (int i = 0; i < 2; i++) {
+                int val = findBestMove(depth + 1, nodeIndex * 2 + i,
+                        false, values, alpha, beta);
+                best = Math.max(best, val);
+                alpha = Math.max(alpha, best);
+
+                // Alpha Beta Pruning
+                if (beta <= alpha)
+                    break;
             }
-
+            return best;
         } else {
-            bestMove = MAX;
-            for (Integer possibleCurrentMove : this.listColumnsOfPossibleMoves()) {
-                value = findBestMove(depth + 1, false);
-                bestMove = Math.max(bestMove, value);
-            }
-        }
+            int best = MAX;
 
-        return bestMove;
+            // Recur for left and
+            // right children
+            for (int i = 0; i < 2; i++) {
+
+                int val = findBestMove(depth + 1, nodeIndex * 2 + i,
+                        true, values, alpha, beta);
+                best = Math.min(best, val);
+                beta = Math.min(beta, best);
+
+                // Alpha Beta Pruning
+                if (beta <= alpha)
+                    break;
+            }
+            return best;
+        }
     }
 
     public int getCounter() {

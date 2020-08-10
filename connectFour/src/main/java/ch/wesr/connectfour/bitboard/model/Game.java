@@ -5,6 +5,7 @@ import ch.wesr.connectfour.bitboard.model.exception.OutsideOfGameBoardException;
 import lombok.SneakyThrows;
 
 import java.util.List;
+import java.util.stream.IntStream;
 
 public class Game {
 
@@ -39,14 +40,12 @@ public class Game {
     }
 
     private boolean isPossibleMove(int column) {
-        long count = bitBoard.listColumnsOfPossibleMoves().stream().filter(integer -> integer.equals(column)).count();
-        return count > 0;
+        int[] possibleMoves = bitBoard.listColumnsOfPossibleMoves();
+        boolean contains = IntStream.of(possibleMoves).anyMatch(x -> x == column);
+        long count = possibleMoves.length;
+        return contains && column >= 0 && column <= BitBoard.BOARD_WIDTH && count > 0;
     }
 
-    public int[] listColumnsOfPossibleMoves() {
-        List<Integer> integers = bitBoard.listColumnsOfPossibleMoves();
-       return integers.stream().mapToInt(i->i).toArray();
-    }
 
     public void printGame() {
         if (printMoves) {

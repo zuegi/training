@@ -5,6 +5,7 @@ import ch.wesr.connectfour.bitboard.model.*;
 import ch.wesr.connectfour.bitboard.model.exception.GameOverException;
 import ch.wesr.connectfour.bitboard.model.exception.IllegalUndoMoveException;
 import ch.wesr.connectfour.bitboard.model.exception.OutsideOfGameBoardException;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -16,11 +17,11 @@ public class PlayerSpec {
     Player playerX;
     Game game;
 
-
+    @Disabled
     @Test
     void playAgainstFirstBot() {
        initalizeValidGame();
-        // playerX starts the game
+        // playerO starts the game
         playerO.makeMove(3);
         // then bot player should make move on its own
         playerX.findBestMove();
@@ -79,7 +80,7 @@ public class PlayerSpec {
     }
 
     @Test
-    void testInvalidMove() {
+    void testInvalidMoveAboveBoardHeigt() {
         initalizeValidGame();
         // given
         // . . . X . . .
