@@ -3,6 +3,7 @@ package ch.wesr.connectfour.bitboard;
 import ch.wesr.connectfour.bitboard.model.BitBoard;
 import ch.wesr.connectfour.bitboard.model.DiscType;
 import ch.wesr.connectfour.bitboard.model.PrintGame;
+import ch.wesr.connectfour.bitboard.model.exception.GameOverException;
 import ch.wesr.connectfour.bitboard.model.exception.IllegalUndoMoveException;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.DisplayName;
@@ -25,12 +26,83 @@ public class BitBoardSpec {
         printGame = new PrintGame();
     }
 
+    @Test
+    void makefindBestMoveToWin() {
+        // given 3 rows filled
+        nextMoveCouldWin(DiscType.O, DiscType.X);
+        // when
+        int bestMove = bitBoard.findBestColumn(DiscType.X);
+        // then
+        assertThrows(GameOverException.class, () -> bitBoard.makeMove(DiscType.X, bestMove));
+    }
 
     @Test
-    void findBestMove() {
-        int[] values = {3, 5, 6, 9, 1, 2, 0, -1};
-        int bestMove = bitBoard.findBestMove(0, 0,true, values,BitBoard.MIN, BitBoard.MAX);
-        assertEquals(5, bestMove);
+    void makeOwinsLeftTopRightDownDiagonal() {
+        // given 3 rows filled
+        nextMoveCouldWin(DiscType.O, DiscType.X);
+
+        printGame.printBoard(bitBoard);
+        // when then
+        assertThrows(GameOverException.class, () -> bitBoard.makeMove(DiscType.X, 0));
+    }
+
+    private void nextMoveCouldWin(DiscType o, DiscType x) {
+        bitBoard.makeMove(o, 0);
+        bitBoard.makeMove(x, 1);
+        bitBoard.makeMove(o, 2);
+        bitBoard.makeMove(x, 3);
+        bitBoard.makeMove(o, 4);
+        // given second row
+        bitBoard.makeMove(x, 0);
+        bitBoard.makeMove(o, 1);
+        bitBoard.makeMove(x, 2);
+        bitBoard.makeMove(o, 3);
+        bitBoard.makeMove(x, 4);
+        // given third row
+        bitBoard.makeMove(o, 0);
+        bitBoard.makeMove(x, 1);
+        bitBoard.makeMove(o, 2);
+        bitBoard.makeMove(x, 3);
+        bitBoard.makeMove(o, 4);
+    }
+
+    @Test
+    void makeXwinsLeftDownTopRightDiagonal() {
+        // given 3 rows filled
+        nextMoveCouldWin(DiscType.X, DiscType.O);
+
+        // when then
+        assertThrows(GameOverException.class, () -> bitBoard.makeMove(DiscType.X, 3));
+
+    }
+
+    @Test
+    void makeOwinsVertical() {
+        bitBoard.makeMove(DiscType.X,0);
+        bitBoard.makeMove(DiscType.O,1);
+        bitBoard.makeMove(DiscType.X,2);
+        bitBoard.makeMove(DiscType.O,3);
+        bitBoard.makeMove(DiscType.X,3);
+        bitBoard.makeMove(DiscType.O,4);
+        bitBoard.makeMove(DiscType.X,1);
+        bitBoard.makeMove(DiscType.O,5);
+        bitBoard.makeMove(DiscType.X,2);
+        printGame.printBoard(bitBoard);
+        // then
+        assertThrows(GameOverException.class, () -> bitBoard.makeMove(DiscType.O, 6));
+    }
+
+    @Test
+    void makeXwinsHorizontal() {
+        // given
+        bitBoard.makeMove(DiscType.X, 0);
+        bitBoard.makeMove(DiscType.O,1);
+        bitBoard.makeMove(DiscType.X,0);
+        bitBoard.makeMove(DiscType.O, 2);
+        bitBoard.makeMove(DiscType.X, 0);
+        bitBoard.makeMove(DiscType.O, 3);
+        // when then
+        assertThrows(GameOverException.class, () -> bitBoard.makeMove(DiscType.X, 0));
     }
 
     @Test

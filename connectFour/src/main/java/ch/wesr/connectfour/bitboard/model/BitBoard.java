@@ -1,9 +1,12 @@
 package ch.wesr.connectfour.bitboard.model;
 
+import ch.wesr.connectfour.bitboard.model.exception.GameOverException;
 import ch.wesr.connectfour.bitboard.model.exception.IllegalUndoMoveException;
+import ch.wesr.connectfour.bitboard.model.exception.OutsideOfGameBoardException;
 import lombok.SneakyThrows;
 
 import java.util.*;
+import java.util.stream.IntStream;
 
 public class BitBoard {
 
@@ -23,13 +26,51 @@ public class BitBoard {
         return new BitBoard();
     }
 
+    public void checkWinner(DiscType discType, long bitboard) {
+
+        long diagonalTopLeft = bitboard & (bitboard >> 6) & (bitboard >> 12) & (bitboard >> 18);
+        long diagonalDownLeft = bitboard & (bitboard >> 8) & (bitboard >> 16) & (bitboard >> 24);
+        long horizontal = bitboard & (bitboard >> 7) & (bitboard >> 14) & (bitboard >> 21);
+        long vertical = bitboard & (bitboard >> 1) & (bitboard >> 2) & (bitboard >> 3);
+
+        if (diagonalTopLeft != 0) {
+            throw new GameOverException("Player " + discType + " won diagonal top left to down right");
+        } else if (diagonalDownLeft != 0) {
+            throw new GameOverException("Player " + discType + " won diagonal down left to top right");
+        } else if (horizontal != 0) {
+            throw new GameOverException("Player " + discType + " won horizontal");
+        } else if (vertical != 0) {
+            throw new GameOverException("Player " + discType + " won vertical");
+        }
+    }
+
     public long makeMove(DiscType discType, int column) {
-        moves.put(counter++, new Move(discType, column));
+        Move potentialMove = new Move(discType, column);
+
+        checkPossibleMove(potentialMove);
         long move = 1L << height[column]++;
-        long aLong = bitboardMap.get(discType);
-        aLong ^= move;
-        bitboardMap.put(discType, aLong);
+        long bitboard = bitboardMap.get(discType);
+        bitboard ^= move;
+
+        checkWinner(discType, bitboard);
+
+        bitboardMap.put(discType, bitboard);
+        moves.put(counter++, potentialMove);
         return bitboardMap.get(discType);
+    }
+
+    @SneakyThrows
+    private void checkPossibleMove(Move potentialMove) {
+        int[] possibleMoves = listColumnsOfPossibleMoves();
+        boolean contains = IntStream.of(possibleMoves).anyMatch(x -> x == potentialMove.getColumn());
+        long count = possibleMoves.length;
+        if (!isPossible(potentialMove, contains, count)) {
+            throw new OutsideOfGameBoardException("DiscType [ " +potentialMove.getDiscType() + " ] plays outside of the board");
+        }
+    }
+
+    private boolean isPossible(Move potentialMove, boolean contains, long count) {
+        return contains && potentialMove.getColumn() >= 0 && potentialMove.getColumn() <= BitBoard.BOARD_WIDTH && count > 0;
     }
 
     @SneakyThrows
@@ -46,6 +87,13 @@ public class BitBoard {
         return bitboardMap.get(discType);
     }
 
+    public int findBestColumn(DiscType discType) {
+        // first discType is maximizer
+
+
+        return 1;
+    }
+
     public int[] listColumnsOfPossibleMoves() {
         List<Integer> moves = new ArrayList<>();
         long TOP = 0b1000000_1000000_1000000_1000000_1000000_1000000_1000000L;
@@ -53,55 +101,6 @@ public class BitBoard {
             if ((TOP & (1L << height[col])) == 0) moves.add(col);
         }
         return moves.stream().mapToInt(i->i).toArray();
-    }
-
-
-    // Returns optimal value for
-    // current player (Initially called
-    // for root and maximizer)
-    public int findBestMove(int depth, int nodeIndex,
-                            Boolean maximizingPlayer,
-                            int[] values, int alpha,
-                            int beta) {
-        // Terminating condition. i.e
-        // leaf node is reached
-        if (depth == 3)
-            return values[nodeIndex];
-
-        if (maximizingPlayer) {
-            int best = MIN;
-
-            // Recur for left and
-            // right children
-            for (int i = 0; i < 2; i++) {
-                int val = findBestMove(depth + 1, nodeIndex * 2 + i,
-                        false, values, alpha, beta);
-                best = Math.max(best, val);
-                alpha = Math.max(alpha, best);
-
-                // Alpha Beta Pruning
-                if (beta <= alpha)
-                    break;
-            }
-            return best;
-        } else {
-            int best = MAX;
-
-            // Recur for left and
-            // right children
-            for (int i = 0; i < 2; i++) {
-
-                int val = findBestMove(depth + 1, nodeIndex * 2 + i,
-                        true, values, alpha, beta);
-                best = Math.min(best, val);
-                beta = Math.min(beta, best);
-
-                // Alpha Beta Pruning
-                if (beta <= alpha)
-                    break;
-            }
-            return best;
-        }
     }
 
     public int getCounter() {
