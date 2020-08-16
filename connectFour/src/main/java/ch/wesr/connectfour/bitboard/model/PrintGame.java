@@ -64,4 +64,8 @@ public class PrintGame {
 
         return result.stream().collect(Collectors.joining(separator));
     }
+
+    public void printBoard(BitBoard bitBoard) {
+        printBoard(bitBoard.getBitboardMap());
+    }
 }
