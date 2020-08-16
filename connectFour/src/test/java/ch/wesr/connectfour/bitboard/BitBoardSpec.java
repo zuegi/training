@@ -39,7 +39,6 @@ public class BitBoardSpec {
         printGame.printBoard(bitBoard);
         int bestColumn = bitBoard.findBestColumn(DiscType.X);
         assertEquals(0, bestColumn);
-
     }
 
     @Test
@@ -108,7 +107,9 @@ public class BitBoardSpec {
     @Test
     void makeValidUndoMove() {
         assertTrue(bitBoard.makeMove(DiscType.X, 2));
+        printGame.printBoard(bitBoard);
         assertTrue(bitBoard.undoMove(DiscType.X, 2));
+        printGame.printBoard(bitBoard);
     }
 
 

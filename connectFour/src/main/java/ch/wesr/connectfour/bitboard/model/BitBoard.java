@@ -86,10 +86,6 @@ public class BitBoard {
         for (int potentialColumn : this.listPossibleColumns()) {
 
             this.makeMove(discType, potentialColumn);
-            if (isWinner(discType)) {
-                break;
-            }
-
             int score = minimax(discType.opponent(), 0);
             this.undoMove(discType, potentialColumn);
 
