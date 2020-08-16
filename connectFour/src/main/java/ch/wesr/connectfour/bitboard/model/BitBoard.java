@@ -44,7 +44,7 @@ public class BitBoard {
     }
 
     public boolean makeMove(DiscType discType, int column) {
-        if (isMovePossible(column)) {
+        if (isPossibleColumn(column)) {
             long move = 1L << height[column]++;
             long bitboard = bitboardMap.get(discType);
             bitboard ^= move;
@@ -56,7 +56,7 @@ public class BitBoard {
         return false;
     }
 
-    private boolean isMovePossible(int column) {
+    public boolean isPossibleColumn(int column) {
         int[] possibleMoves = listPossibleColumns();
         boolean contains = IntStream.of(possibleMoves).anyMatch(x -> x == column);
         long count = possibleMoves.length;
@@ -69,7 +69,7 @@ public class BitBoard {
 
 
     public boolean undoMove(DiscType discType, int column) {
-        if (isMovePossible(column)) {
+        if (isPossibleColumn(column)) {
             long moveLong = 1L << --height[column];
             long aLong = bitboardMap.get(discType);
             aLong ^= moveLong;

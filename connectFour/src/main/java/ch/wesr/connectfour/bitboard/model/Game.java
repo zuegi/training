@@ -1,46 +1,28 @@
 package ch.wesr.connectfour.bitboard.model;
 
-import ch.wesr.connectfour.bitboard.model.exception.GameOverException;
-import ch.wesr.connectfour.bitboard.model.exception.OutsideOfGameBoardException;
-import ch.wesr.connectfour.mySolution.model.Disc;
-import lombok.SneakyThrows;
-
-import java.util.List;
-import java.util.stream.IntStream;
-
 public class Game {
 
-//    private final BitBoard bitBoard;
-//    private Player firstPlayer;
-//    private boolean printMoves;
-//    private Player currentPlayer;
-//    private PrintGame printBoard;
-//
-//    public Game() {
-//        this.bitBoard = new BitBoard();
-//        this.printBoard = new PrintGame();
-//    }
-//
-//
-//    @SneakyThrows
-//    public long makeMove(DiscType discType, int column) {
-//        if (!isPossibleMove(column)) {
-//            throw new OutsideOfGameBoardException(this.currentPlayer.getName() + " plays outside of the board");
-//        }
-//        long bitboard = bitBoard.makeMove(discType, column);
-//        checkWinner(bitboard);
-//        return bitboard;
-//    }
-//
-//    @SneakyThrows
-//    public long undoMove(DiscType discType, int column) {
-//        if (!isPossibleMove(column)) {
-//            throw new OutsideOfGameBoardException(this.currentPlayer.getName() + " plays outside of the board");
-//        }
-//        long bitboard = bitBoard.undoMove(discType);
-//        return bitboard;
-//    }
-//
+    private final BitBoard bitBoard;
+    private PrintGame printBoard;
+    private Player firstPlayer;
+    private Player currentPlayer;
+    private boolean printMoves;
+
+    public Game() {
+        this.bitBoard = new BitBoard();
+        this.printBoard = new PrintGame();
+    }
+
+
+
+    public boolean makeMove(DiscType discType, int column) {
+        boolean validMove = false;
+        if (bitBoard.isPossibleColumn(column)) {
+            validMove= bitBoard.makeMove(discType, column);
+        }
+        return validMove;
+    }
+
 //    private boolean isPossibleMove(int column) {
 //        int[] possibleMoves = bitBoard.listColumnsOfPossibleMoves();
 //        boolean contains = IntStream.of(possibleMoves).anyMatch(x -> x == column);
@@ -54,34 +36,46 @@ public class Game {
 //        }
 //    }
 //
-//    public void printGame() {
-//        if (printMoves) {
-//            printBoard.printBoard(bitBoard.getBitboardMap());
-//        }
-//    }
-//
-//    public void setFirstPlayer(Player player) {
-//        this.firstPlayer = player;
-//    }
-//
-//    public Player getFirstPlayer() {
-//        return firstPlayer;
-//    }
-//
-//    public void printMoves(boolean printMoves) {
-//        this.printMoves = printMoves;
-//    }
-//
-//    public void setCurrentPlayer(Player player) {
-//        this.currentPlayer = player;
-//    }
-//
-//    public Player getCurrentPlayer() {
-//        return currentPlayer;
-//    }
-//
-//    public long getMostRecentlyMove(DiscType discType) {
-//        return bitBoard.getMostRecentlyMove(discType);
-//    }
 
+    public void setFirstPlayer(Player player) {
+        this.firstPlayer = player;
+    }
+
+    public Player getFirstPlayer() {
+        return firstPlayer;
+    }
+
+    public void printMoves(boolean printMoves) {
+        this.printMoves = printMoves;
+    }
+
+    public void setCurrentPlayer(Player player) {
+        this.currentPlayer = player;
+    }
+
+    public Player getCurrentPlayer() {
+        return currentPlayer;
+    }
+
+    public boolean isWinner(DiscType discType) {
+        return bitBoard.isWinner(discType);
+    }
+
+    public boolean isPossibleColum(int column) {
+        return bitBoard.isPossibleColumn(column);
+    }
+
+    public boolean undoMove(DiscType discType, int column) {
+        return bitBoard.undoMove(discType, column);
+    }
+
+
+    public int findBestColumn(DiscType discType) {
+        return bitBoard.findBestColumn(discType);
+    }
+
+    public void printBoard() {
+        if(printMoves)
+            printBoard.printBoard(bitBoard);
+    }
 }
