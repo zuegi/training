@@ -86,10 +86,13 @@ public class BitBoard {
         for (int potentialColumn : this.listPossibleColumns()) {
 
             this.makeMove(discType, potentialColumn);
-            printGame.printBoard(this);
+            if (isWinner(discType)) {
+                break;
+            }
+
             int score = minimax(discType.opponent(), 0);
             this.undoMove(discType, potentialColumn);
-            printGame.printBoard(this);
+
             if (score > bestScore) {
                 bestScore = score;
                 bestColumn = potentialColumn;
@@ -116,7 +119,6 @@ public class BitBoard {
             for (int potentialColumn : this.listPossibleColumns()) {
 
                 this.makeMove(discType, potentialColumn);
-                printGame.printBoard(this);
                 int score = minimax(discType.opponent(), depth +1);
                 this.undoMove(discType, potentialColumn);
 
@@ -129,7 +131,7 @@ public class BitBoard {
             for (int potentialColumn : this.listPossibleColumns()) {
 
                 this.makeMove(discType, potentialColumn);
-                printGame.printBoard(this);
+
                 int score = minimax(discType.opponent(), depth +1);
                 this.undoMove(discType, potentialColumn);
 

@@ -26,11 +26,19 @@ public class BitBoardSpec {
     }
 
     @Test
-    void findeBestColumn() {
+    void findBestColumnOn4() {
         nextMoveOnColumn4CoulddWin(DiscType.X, DiscType.O);
+        int bestColumn = bitBoard.findBestColumn(DiscType.X);
+        assertEquals(0, bestColumn);
+        assertTrue(bitBoard.makeMove(DiscType.X, 4));
+    }
+
+    @Test
+    void findeBestColumnOn0() {
+        nextMoveOnColumn0CoulddWin(DiscType.X, DiscType.O);
         printGame.printBoard(bitBoard);
         int bestColumn = bitBoard.findBestColumn(DiscType.X);
-        assertEquals(4, bestColumn);
+        assertEquals(0, bestColumn);
 
     }
 
