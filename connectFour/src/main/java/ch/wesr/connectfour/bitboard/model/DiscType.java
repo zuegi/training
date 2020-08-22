@@ -6,4 +6,8 @@ public enum DiscType {
     public DiscType opponent() {
         return this.equals(DiscType.X) ? DiscType.O : DiscType.X;
     }
+
+    public char toChar() {
+        return name().charAt(0);
+    }
 }
