@@ -14,12 +14,11 @@ public class PrintGame {
 
     public void printBoard(Map<DiscType, Long> bitboardMap) {
         String stringO = convertBinaryToDiscTypeString(DiscType.O, bitboardMap);
-
         String stringX = convertBinaryToDiscTypeString(DiscType.X, bitboardMap);
         String mergedBitBoardString = merge(stringO, stringX);
+
         assert mergedBitBoardString != null;
         assert mergedBitBoardString.length() == 49;
-        System.out.println(mergedBitBoardString);
 
         for (int height = BitBoard.BOARD_HEIGHT -1; height >= 0 ; height--) {
             System.out.print(height + "  ");
