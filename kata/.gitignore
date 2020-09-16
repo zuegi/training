@@ -23,5 +23,6 @@ nbbuild/
 dist/
 nbdist/
 .nb-gradle/
-/offeringservice/openshift/secrets/int/application-nightlyint.properties
-/offeringservice/openshift/secrets/int/createNightlySecret.cmd
+
+##### Pictures
+src/main/resources/statice/ext/**
