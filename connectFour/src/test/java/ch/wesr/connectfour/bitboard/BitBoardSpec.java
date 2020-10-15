@@ -4,7 +4,6 @@ import ch.wesr.connectfour.bitboard.model.BitBoard;
 import ch.wesr.connectfour.bitboard.model.DiscType;
 import ch.wesr.connectfour.bitboard.model.PrintGame;
 import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
@@ -26,20 +25,24 @@ public class BitBoardSpec {
     }
 
     @Test
-    void findBestColumnOn4() {
-        nextMoveOnColumn4CoulddWin(DiscType.X, DiscType.O);
-        int bestColumn = bitBoard.findBestColumn(DiscType.X);
-        assertEquals(0, bestColumn);
-        assertTrue(bitBoard.makeMove(DiscType.X, 4));
+    void printHelper() {
+        BitBoardHelper.nextMoveCouldWinOnColumn4(bitBoard);
+        printGame.printBoard(bitBoard);
     }
+
+
+
 
     @Test
     void findeBestColumnOn0() {
-        nextMoveOnColumn0CoulddWin(DiscType.X, DiscType.O);
-        printGame.printBoard(bitBoard);
-        int bestColumn = bitBoard.findBestColumn(DiscType.X);
-        assertEquals(0, bestColumn);
+
+//        int bestColumn = bitBoard.findBestColumn(DiscType.X);
+//        printGame.printBoard(bitBoard);||
+//        assertEquals(0, bestColumn);
+//        assertTrue(bitBoard.makeMove(DiscType.O, bestColumn));
+//        printGame.printBoard(bitBoard);
     }
+
 
     @Test
     void makeOwinsLeftTopRightDownDiagonal() {
@@ -96,22 +99,36 @@ public class BitBoardSpec {
         assertTrue(bitBoard.isWinner(DiscType.X));
     }
 
-    @Disabled
     @Test
     void makeInvalidUndoMove() {
         bitBoard.makeMove(DiscType.X, 2);
         bitBoard.makeMove(DiscType.O, 3);
-        assertFalse(bitBoard.undoMove(DiscType.X, 2));
+        bitBoard.makeMove(DiscType.X, 3);
+        bitBoard.undoMove(DiscType.O);
+        bitBoard.undoMove(DiscType.X);
     }
 
     @Test
     void makeValidUndoMove() {
-        assertTrue(bitBoard.makeMove(DiscType.X, 2));
-        printGame.printBoard(bitBoard);
-        assertTrue(bitBoard.undoMove(DiscType.X, 2));
-        printGame.printBoard(bitBoard);
+        bitBoard.makeMove(DiscType.X, 2);
+        assertEquals(BitBoardHelper.COLUMN_2_POSITION_14, bitBoard.getBitboardMap().get(DiscType.X));
+        bitBoard.makeMove(DiscType.O, 3);
+        assertEquals(BitBoardHelper.COLUMN_3_POSITION_21, bitBoard.getBitboardMap().get(DiscType.O));
+        // undod
+        bitBoard.undoMove(DiscType.O);
+        assertEquals(0L, bitBoard.getBitboardMap().get(DiscType.O));
+        bitBoard.undoMove(DiscType.X);
+        assertEquals(0L, bitBoard.getBitboardMap().get(DiscType.X));
     }
 
+    @Test
+    void makeMoveAndUndoIt() {
+        long bitboardWithColumn2 = 16384;
+        bitBoard.makeMove(DiscType.X, 2);
+        assertEquals(BitBoardHelper.COLUMN_2_POSITION_14, bitBoard.getBitboardMap().get(DiscType.X));
+        bitBoard.undoMove(DiscType.X);
+        assertEquals(0L, bitBoard.getBitboardMap().get(DiscType.X));
+    }
 
     @DisplayName("Make alternating (O/X) moves for exactly one constellation")
     @Test
@@ -150,7 +167,7 @@ public class BitBoardSpec {
             overboard++;
         }
         // when overboard then
-        assertFalse(bitBoard.makeMove(discTypes[overboard & 1], 0));
+        bitBoard.makeMove(discTypes[overboard & 1], 0);
     }
 
     @DisplayName("Make alternating (O/X) moves only on column 0")
@@ -175,7 +192,7 @@ public class BitBoardSpec {
             overboard++;
         }
         // when overboard then
-        assertFalse(bitBoard.makeMove(discTypes[overboard & 1], overboard));
+        bitBoard.makeMove(discTypes[overboard & 1], overboard);
 
     }
 
@@ -196,12 +213,12 @@ public class BitBoardSpec {
 
     @Test
     void makeInvalidMove() {
-        assertFalse(bitBoard.makeMove(DiscType.X, -1));
+        bitBoard.makeMove(DiscType.X, -1);
     }
 
     @Test
     void makeValidMove() {
-        assertTrue(bitBoard.makeMove(DiscType.X, 0));
+        bitBoard.makeMove(DiscType.X, 0);
     }
 
     @Test
@@ -216,7 +233,6 @@ public class BitBoardSpec {
     void ListPossibleMovesButColumn2() {
         int[] expectedArray = new int[]{0, 1, 3, 4, 5, 6};
         makeOneColumnOccupied();
-        printGame.printBoard(bitBoard);
         assertTrue(Arrays.equals(expectedArray, bitBoard.listPossibleColumns()));
     }
 
@@ -249,24 +265,71 @@ public class BitBoardSpec {
         bitBoard.makeMove(o, 4);
     }
 
-    private void nextMoveOnColumn4CoulddWin(DiscType o, DiscType x) {
+    private void nextMoveOnColumn4CouldWin(DiscType o, DiscType x) {
         bitBoard.makeMove(x, 0);
         bitBoard.makeMove(o, 1);
         bitBoard.makeMove(x, 2);
         bitBoard.makeMove(o, 3);
         bitBoard.makeMove(x, 4);
+        bitBoard.makeMove(o, 5);
+        bitBoard.makeMove(x, 6);
         // given second row
         bitBoard.makeMove(o, 0);
         bitBoard.makeMove(x, 1);
         bitBoard.makeMove(o, 2);
         bitBoard.makeMove(x, 3);
         bitBoard.makeMove(o, 4);
+        bitBoard.makeMove(x, 5);
+        bitBoard.makeMove(o, 6);
         // given third row
-        bitBoard.makeMove(x, 1);
-        bitBoard.makeMove(o, 0);
-        bitBoard.makeMove(x, 2);
-        bitBoard.makeMove(o, 3);
+        bitBoard.makeMove(x, 6);
+        bitBoard.makeMove(o, 5);
         bitBoard.makeMove(x, 4);
+        bitBoard.makeMove(o, 3);
+        bitBoard.makeMove(x, 2);
+        bitBoard.makeMove(o, 1);
+        bitBoard.makeMove(x, 0);
+        // and now
+        bitBoard.makeMove(o, 1);
+        bitBoard.makeMove(x, 0);
+        bitBoard.makeMove(o, 3);
+        assertFalse(bitBoard.isWinner(o));
+        bitBoard.makeMove(x, 2);
+        assertFalse(bitBoard.isWinner(x));
+        bitBoard.makeMove(o, 5);
+        assertFalse(bitBoard.isWinner(o));
+        bitBoard.makeMove(x, 4);
+        assertFalse(bitBoard.isWinner(x));
+
+        bitBoard.makeMove(o, 0);
+        assertFalse(bitBoard.isWinner(o));
+
+        bitBoard.makeMove(x, 6);
+        assertFalse(bitBoard.isWinner(x));
+
+        bitBoard.makeMove(x, 1);
+        assertFalse(bitBoard.isWinner(x));
+
+        bitBoard.makeMove(o, 2);
+        assertFalse(bitBoard.isWinner(o));
+        bitBoard.makeMove(x, 3);
+        assertFalse(bitBoard.isWinner(x));
+
+        bitBoard.makeMove(o, 4);
+        assertFalse(bitBoard.isWinner(o));
+
+        bitBoard.makeMove(x, 5);
+        assertFalse(bitBoard.isWinner(x));
+
+        bitBoard.makeMove(o, 6);
+        assertFalse(bitBoard.isWinner(o)); // row 4 finished
+        // row 5
+        bitBoard.makeMove(x, 2);
+        assertFalse(bitBoard.isWinner(x));
+        bitBoard.makeMove(o, 6);
+        assertFalse(bitBoard.isWinner(o));
+        bitBoard.makeMove(x, 0);
+        assertFalse(bitBoard.isWinner(x));
     }
 
 }

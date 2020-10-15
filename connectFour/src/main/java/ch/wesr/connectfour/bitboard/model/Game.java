@@ -17,9 +17,9 @@ public class Game {
 
     public boolean makeMove(DiscType discType, int column) {
         boolean validMove = false;
-        if (bitBoard.isPossibleColumn(column)) {
-            validMove= bitBoard.makeMove(discType, column);
-        }
+//        if (bitBoard.isPossibleColumn(column)) {
+//            validMove= bitBoard.makeMove(discType, column);
+//        }
         return validMove;
     }
 
@@ -65,9 +65,9 @@ public class Game {
         return bitBoard.isPossibleColumn(column);
     }
 
-    public boolean undoMove(DiscType discType, int column) {
-        return bitBoard.undoMove(discType, column);
-    }
+//    public boolean undoMove(DiscType discType, int column) {
+//        return bitBoard.undoMove(discType, column);
+//    }
 
 
     public int findBestColumn(DiscType discType) {

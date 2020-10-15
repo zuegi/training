@@ -75,10 +75,10 @@ public class Player {
         if (this.game.getCurrentPlayer() != null && !this.game.getCurrentPlayer().equals(this)) {
             throw new IllegalUndoMoveException(this.getName() + " is not the next player");
         }
-        if (game.isPossibleColum(column)) {
-            game.setCurrentPlayer(this);
-            return game.undoMove(this.discType, column);
-        }
+//        if (game.isPossibleColum(column)) {
+//            game.setCurrentPlayer(this);
+//            return game.undoMove(this.discType, column);
+//        }
         return false;
     }
 

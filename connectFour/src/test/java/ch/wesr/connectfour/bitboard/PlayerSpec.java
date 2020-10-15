@@ -5,8 +5,12 @@ import ch.wesr.connectfour.bitboard.model.*;
 import ch.wesr.connectfour.bitboard.model.exception.GameOverException;
 import ch.wesr.connectfour.bitboard.model.exception.IllegalUndoMoveException;
 import ch.wesr.connectfour.bitboard.model.exception.OutsideOfGameBoardException;
+import org.junit.jupiter.api.Disabled;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -16,24 +20,7 @@ public class PlayerSpec {
     Player grootAsO;
     Game game;
 
-//
-//    @Test
-//    void letsPlayTwoBotsAgainst() {
-//        initalizeValidGame();
-//        zuegi.setMaximizer(true);
-//        groot.setMaximizer(false);
-//        List<Player> playerList = new ArrayList<>();
-//        int counter = 0;
-//        while (true) {
-//            if ((counter++ & 1) == 0) {
-//                zuegi.findBestMove();
-//            } else {
-//                groot.findBestMove();
-//            }
-//        }
-//
-//    }
-//
+    @Disabled
     @Test
     void playAgainstFirstBot() {
        initalizeValidGameNextMoveHasZuegiAsX();

@@ -4,18 +4,14 @@ import java.util.*;
 import java.util.stream.IntStream;
 
 public class BitBoard {
-
-    public static final int MIN = -1000;
-    public static final int MAX = 1000;
+    public static int MAX_SLOTS = 42;
     public static int BOARD_WIDTH = 7;
     public static int BOARD_HEIGHT = 6;
-
     private final int[] height = new int[]{0, 7, 14, 21, 28, 35, 42};
-    private int counter = 0;
+    private final int[] moves = new int[MAX_SLOTS];
+    private int counter;
     Map<DiscType, Long> bitboardMap = new HashMap<>(
             Map.of(DiscType.O, 0L, DiscType.X, 0L));
-
-    Map<Integer, DiscType> moves = new HashMap<>();
 
     PrintGame printGame = new PrintGame();
 
@@ -43,17 +39,24 @@ public class BitBoard {
         return false;
     }
 
-    public boolean makeMove(DiscType discType, int column) {
+
+    public void makeMove(DiscType discType, int column) {
         if (isPossibleColumn(column)) {
             long move = 1L << height[column]++;
-            long bitboard = bitboardMap.get(discType);
-            bitboard ^= move;
-
-            bitboardMap.put(discType, bitboard);
-            moves.put(column, discType);
-            return true;
+            Long bitboardOfDiscType = bitboardMap.get(discType);
+            bitboardOfDiscType ^= move;
+            bitboardMap.put(discType, bitboardOfDiscType);
+            moves[counter++] = column;
         }
-        return false;
+
+    }
+
+    public void undoMove(DiscType discType) {
+        int column = moves[--counter];
+        long move = 1L << --height[column];
+        Long bitboardOfDiscType = bitboardMap.get(discType);
+        bitboardOfDiscType ^= move;
+        bitboardMap.put(discType, bitboardOfDiscType);
     }
 
     public boolean isPossibleColumn(int column) {
@@ -67,69 +70,54 @@ public class BitBoard {
         return contains && column >= 0 && column <= BitBoard.BOARD_WIDTH && count > 0;
     }
 
-
-    public boolean undoMove(DiscType discType, int column) {
-        if (isPossibleColumn(column)) {
-            long moveLong = 1L << --height[column];
-            long aLong = bitboardMap.get(discType);
-            aLong ^= moveLong;
-            bitboardMap.put(discType, aLong);
-            return true;
-        }
-        return false;
-    }
-
     public int findBestColumn(DiscType discType) {
 
         int bestScore = Integer.MIN_VALUE;
         int bestColumn = 0;
-        for (int potentialColumn : this.listPossibleColumns()) {
 
-            this.makeMove(discType, potentialColumn);
-            int score = minimax(discType.opponent(), 0);
-            this.undoMove(discType, potentialColumn);
-
-            if (score > bestScore) {
-                bestScore = score;
-                bestColumn = potentialColumn;
-            }
+        int score = minimax(MAX_SLOTS, discType, true);
+        if (score > bestScore) {
+            bestScore = score;
         }
         return bestColumn;
     }
 
-    private int minimax(DiscType discType, int depth) {
+    private int minimax(int depth, DiscType discType, boolean maximizing) {
         // Terminating condition
-        if (isWinner(discType)) {
-            int minimax = 0;
-            if(discType.equals(DiscType.X))
-                minimax = -1;
-            if (discType.equals(DiscType.O))
-                minimax = 1;
-            return minimax;
+        if (depth == 0) {
+            return 0;
         }
-        boolean maximizing = discType.equals(DiscType.X);
 
         if (maximizing) {
-
             int bestScore = Integer.MIN_VALUE;
             for (int potentialColumn : this.listPossibleColumns()) {
-
-                this.makeMove(discType, potentialColumn);
-                int score = minimax(discType.opponent(), depth +1);
-                this.undoMove(discType, potentialColumn);
+                int score;
+                if (isWinner(discType)) {
+                    score = -1;
+                } else if (isWinner(discType.opponent())) {
+                    score = 1;
+                } else {
+                    this.makeMove(discType, potentialColumn);
+                    score = minimax(depth - 1, discType.opponent(), false);
+                }
+                this.undoMove(discType);
 
                 bestScore = Math.max(score, bestScore);
-
             }
             return bestScore;
         } else {
             int bestScore = Integer.MAX_VALUE;
             for (int potentialColumn : this.listPossibleColumns()) {
-
-                this.makeMove(discType, potentialColumn);
-
-                int score = minimax(discType.opponent(), depth +1);
-                this.undoMove(discType, potentialColumn);
+                int score;
+                if (isWinner(discType)) {
+                    score = 1;
+                } else if (isWinner(discType.opponent())) {
+                    score = -1;
+                } else {
+                    this.makeMove(discType, potentialColumn);
+                    score = minimax(depth - 1, discType.opponent(), true);
+                }
+                this.undoMove(discType);
 
                 bestScore = Math.min(score, bestScore);
 
@@ -142,15 +130,12 @@ public class BitBoard {
     public int[] listPossibleColumns() {
         List<Integer> moves = new ArrayList<>();
         long TOP = 0b1000000_1000000_1000000_1000000_1000000_1000000_1000000L;
-        for (int col = 0; col <= 6; col++) {
+        for (int col = 0; col <= BOARD_WIDTH - 1; col++) {
             if ((TOP & (1L << height[col])) == 0) moves.add(col);
         }
         return moves.stream().mapToInt(i -> i).toArray();
     }
 
-    public int getCounter() {
-        return counter;
-    }
 
     public long getMostRecentlyMove(DiscType discType) {
         return bitboardMap.get(discType);
